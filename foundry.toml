@@ -4,5 +4,4 @@ out = 'out'
 libs = ['lib']
 
 [rpc_endpoints]
-mainnet = "${RPC_MAINNET}"
-goerli = "${RPC_GOERLI}"
+goerli = "${TESTNET_RPC}"

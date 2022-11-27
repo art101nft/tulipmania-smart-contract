@@ -48,12 +48,12 @@ contract NFT is ERC721, Ownable {
     }
 
     function tokenURI(uint256 id) public view virtual override returns (string memory) {
-        string memory image = Base64.encode(bytes(svg.render()));
+        // string memory image = Base64.encode(bytes(svg.render()));
         return string(
             abi.encodePacked(
                 '{"name":"NFT token', id, '",',
                 '"description": "sample description",',
-                '"image": "data:image/svg+xml;base64,', image, '"}'
+                '"image": "data:image/svg+xml,', svg.render(), '"}'
             )
         );
     }
