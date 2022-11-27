@@ -2,9 +2,9 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import "../src/NFT_sm.sol";
+import "../src/NFT.sol";
 
-contract NFT_sm is Test {
+contract NFTsolmate is Test {
     NFT public nft;
 
     function setUp() public {
