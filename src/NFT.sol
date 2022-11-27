@@ -29,13 +29,14 @@ contract NFT is ERC721, Ownable {
         return tempUint;
     }
 
-    function generateSVGofTokenById(uint256 _tokenId) public virtual view returns (string memory) {
-        return generateSVGFromHash(bytes32(_tokenId));
-    }
+    // function generateSVGofTokenById(uint256 _tokenId) public virtual view returns (string memory) {
+    //     return generateSVGFromHash(bytes32(_tokenId));
+    // }
 
-    function generateSVGFromHash(bytes32 _hash) public virtual view returns (string memory) {
-        bytes memory bhash = abi.encodePacked(_hash);
-    }
+    // function generateSVGFromHash(bytes32 _hash) public virtual view returns (string memory) {
+    //     bytes memory bhash = abi.encodePacked(_hash);
+    //     return svg.render();
+    // }
 
     function mint() public payable {
         uint256 newItemId = ++currentTokenId;
@@ -47,19 +48,12 @@ contract NFT is ERC721, Ownable {
     }
 
     function tokenURI(uint256 id) public view virtual override returns (string memory) {
-        string memory image = Base64.encode(bytes(generateSVGofTokenById(id)));
+        string memory image = Base64.encode(bytes(svg.render()));
         return string(
             abi.encodePacked(
-                'data:application/json;base64,',
-                Base64.encode(
-                    bytes(
-                        abi.encodePacked(
-                            '{"name":"NFT token', id, '"',
-                            '"description": "description"',
-                            '"image": "data:image/svg+xml;base64,', image, '"}'
-                        )
-                    )
-                )
+                '{"name":"NFT token', id, '",',
+                '"description": "sample description",',
+                '"image": "data:image/svg+xml;base64,', image, '"}'
             )
         );
     }
