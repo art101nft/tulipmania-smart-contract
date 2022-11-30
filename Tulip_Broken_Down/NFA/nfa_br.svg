@@ -1,4 +1,2 @@
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>
-    <circle cx='624.4' cy='1024.5' r='64' style='fill:#231f20'/>
-    <path d='M595 1012.5h7l7.1 11.2v-11.2h6.8v24h-6.5l-7.7-12.1v12.1H595v-24zm23.5 0h13.8v6.3h-7v2.5h7v6.3h-7v8.9h-6.8v-24zm21 0h6.4l7.9 24H647l-.9-2.9h-6.8l-.9 2.9h-6.8l7.9-24zm3.2 10.1-1.6 5h3.1l-1.5-5z' style='fill:#f9f9f9'/>
-</svg>
+<circle cx='624.4' cy='1024.5' r='64' style='fill:#231f20'/>
+<path d='M595 1012.5h7l7.1 11.2v-11.2h6.8v24h-6.5l-7.7-12.1v12.1H595v-24zm23.5 0h13.8v6.3h-7v2.5h7v6.3h-7v8.9h-6.8v-24zm21 0h6.4l7.9 24H647l-.9-2.9h-6.8l-.9 2.9h-6.8l7.9-24zm3.2 10.1-1.6 5h3.1l-1.5-5z' style='fill:#f9f9f9'/>

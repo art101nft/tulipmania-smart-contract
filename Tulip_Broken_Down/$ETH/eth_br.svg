@@ -1,11 +1,6 @@
-<svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' x='0' y='0' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>
-    <style>
-        .st1{fill:#8a92b2}.st2{fill:#62688f}
-    </style>
-    <circle cx='624.4' cy='1024.5' r='64' style='fill-rule:evenodd;clip-rule:evenodd;fill:#f9f9f9'/>
-    <path class='st1' d='m624.4 976.5-30 48.9 30-13.4z'/>
-    <path class='st2' d='m624.4 1012-30 13.4 30 17.4zm30 13.4-30-48.9v35.5z'/>
-    <path style='fill:#454a75' d='m624.4 1042.8 30-17.4-30-13.4z'/>
-    <path class='st1' d='m594.4 1031 30 41.5v-24.1z'/>
-    <path class='st2' d='M624.4 1048.4v24.1l30-41.5z'/>
-</svg>
+<circle cx='624.4' cy='1024.5' r='64' style='fill-rule:evenodd;clip-rule:evenodd;fill:#f9f9f9'/>
+<path style='fill:#8a92b2' d='m624.4 976.5-30 48.9 30-13.4z'/>
+<path style='fill:#62688f' d='m624.4 1012-30 13.4 30 17.4zm30 13.4-30-48.9v35.5z'/>
+<path style='fill:#454a75' d='m624.4 1042.8 30-17.4-30-13.4z'/>
+<path style='fill:#8a92b2' d='m594.4 1031 30 41.5v-24.1z'/>
+<path style='fill:#62688f' d='M624.4 1048.4v24.1l30-41.5z'/>
