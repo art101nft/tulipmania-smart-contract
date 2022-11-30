@@ -1,22 +1,22 @@
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0" y="0" viewBox="0 0 800 1200" style="enable-background:new 0 0 800 1200" xml:space="preserve">
+<svg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0' y='0' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>
     <style>
         .st1{fill-rule:evenodd;clip-rule:evenodd}.st1,.st2{fill:#5fcade}
     </style>
-    <path id="SVGID_00000172434574012232384680000012253081619231249035_" d="M173 1088.5c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z" style="fill:#231f20"/>
+    <path id='SVGID_00000172434574012232384680000012253081619231249035_' d='M173 1088.5c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z' style='fill:#231f20'/>
     <defs>
-        <path id="SVGID_1_" d="M173 1088.5c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z"/>
+        <path id='SVGID_1_' d='M173 1088.5c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z'/>
     </defs>
-    <clipPath id="SVGID_00000068663952523043998780000002214912030354041786_">
-        <use xlink:href="#SVGID_1_" style="overflow:visible"/>
+    <clipPath id='SVGID_00000068663952523043998780000002214912030354041786_'>
+        <use xlink:href='#SVGID_1_' style='overflow:visible'/>
     </clipPath>
-    <path id="SVGID_00000147911416437156860160000005668171959552082605_" class="st1" d="M158.9 1043.1h17.6v17.6h-17.6z"/>
-    <path id="SVGID_00000023249522801311595530000010643504544061220738_" class="st2" d="M136.9 1036.2v-17.6h17.6v17.6z"/>
-    <path id="SVGID_00000009571797879017299120000002981768561954765971_" class="st2" d="M158.9 1036.2v-17.6h39.5v17.6z"/>
+    <path id='SVGID_00000147911416437156860160000005668171959552082605_' class='st1' d='M158.9 1043.1h17.6v17.6h-17.6z'/>
+    <path id='SVGID_00000023249522801311595530000010643504544061220738_' class='st2' d='M136.9 1036.2v-17.6h17.6v17.6z'/>
+    <path id='SVGID_00000009571797879017299120000002981768561954765971_' class='st2' d='M158.9 1036.2v-17.6h39.5v17.6z'/>
     <defs>
-        <path id="SVGID_00000150819482363763651550000018135484356913165483_" d="M136.9 1018.6h17.6v17.6h-17.6z"/>
+        <path id='SVGID_00000150819482363763651550000018135484356913165483_' d='M136.9 1018.6h17.6v17.6h-17.6z'/>
     </defs>
-    <clipPath id="SVGID_00000057110534749686344810000012939257105546155914_">
-        <use xlink:href="#SVGID_00000150819482363763651550000018135484356913165483_" style="overflow:visible"/>
+    <clipPath id='SVGID_00000057110534749686344810000012939257105546155914_'>
+        <use xlink:href='#SVGID_00000150819482363763651550000018135484356913165483_' style='overflow:visible'/>
     </clipPath>
-    <path id="SVGID_00000015334430782613453290000014339158149813377411_" class="st1" d="M158.9 994.2H213v17.6h-54.1z"/>
+    <path id='SVGID_00000015334430782613453290000014339158149813377411_' class='st1' d='M158.9 994.2H213v17.6h-54.1z'/>
 </svg>

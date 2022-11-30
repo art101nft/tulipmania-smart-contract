@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" style="enable-background:new 0 0 800 1200" xml:space="preserve">
-    <linearGradient id="a" gradientUnits="userSpaceOnUse" x1="400" y1="1146" x2="400" y2="54">
-        <stop offset=".002" style="stop-color:#fad632"/>
-        <stop offset="1" style="stop-color:#f40392"/>
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>
+    <linearGradient id='a' gradientUnits='userSpaceOnUse' x1='400' y1='1146' x2='400' y2='54'>
+        <stop offset='.002' style='stop-color:#fad632'/>
+        <stop offset='1' style='stop-color:#f40392'/>
     </linearGradient>
-    <path style="fill:url(#a)" d="M50 54h700v1092H50z"/>
+    <path style='fill:url(#a)' d='M50 54h700v1092H50z'/>
 </svg>
