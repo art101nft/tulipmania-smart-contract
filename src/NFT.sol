@@ -37,6 +37,9 @@ contract NFT is ERC721, Ownable {
             abi.encodePacked(
                 openSVG(),
                 logoBTC(0),
+                logoAPE(1),
+                logoDOGE(2),
+                logoETH(3),
                 closeSVG()
             )
         );
@@ -63,6 +66,54 @@ contract NFT is ERC721, Ownable {
         } else {
             return string(
                 abi.encodePacked(
+                )
+            );
+        }
+    }
+
+    function logoETH(uint256 quadrant) private pure returns (string memory) {
+        if (quadrant == 3) {
+            return string(
+                abi.encodePacked(
+                    "<circle cx='173' cy='1024.5' r='64' style='fill-rule:evenodd;clip-rule:evenodd;fill:#f9f9f9'/>",
+                    "<path style='fill:#8a92b2' d='m173 976.5-30 48.9 30-13.4z'/>",
+                    "<path style='fill:#62688f' d='m173 1012-30 13.4 30 17.4zm30 13.4-30-48.9v35.5z'/>",
+                    "<path style='fill:#454a75' d='m173 1042.8 30-17.4-30-13.4z'/>",
+                    "<path style='fill:#8a92b2' d='m143 1031 30 41.5v-24.1z'/>",
+                    "<path style='fill:#62688f' d='M173 1048.4v24.1l30-41.5z'/>"
+                )
+            );
+        } else if (quadrant == 2) {
+            return string(
+                abi.encodePacked(
+                    "<circle cx='624.4' cy='1024.5' r='64' style='fill-rule:evenodd;clip-rule:evenodd;fill:#f9f9f9'/>",
+                    "<path style='fill:#8a92b2' d='m624.4 976.5-30 48.9 30-13.4z'/>",
+                    "<path style='fill:#62688f' d='m624.4 1012-30 13.4 30 17.4zm30 13.4-30-48.9v35.5z'/>",
+                    "<path style='fill:#454a75' d='m624.4 1042.8 30-17.4-30-13.4z'/>",
+                    "<path style='fill:#8a92b2' d='m594.4 1031 30 41.5v-24.1z'/>",
+                    "<path style='fill:#62688f' d='M624.4 1048.4v24.1l30-41.5z'/>"
+                )
+            );
+        } else if (quadrant == 1) {
+            return string(
+                abi.encodePacked(
+                    "<circle cx='624.4' cy='176.1' r='64' style='fill-rule:evenodd;clip-rule:evenodd;fill:#f9f9f9'/>",
+                    "<path style='fill:#8a92b2' d='m624.4 128.1-30 48.9 30-13.4z'/>",
+                    "<path style='fill:#62688f' d='m624.4 163.6-30 13.4 30 17.4zm30 13.4-30-48.9v35.5z'/>",
+                    "<path style='fill:#454a75' d='m624.4 194.4 30-17.4-30-13.4z'/>",
+                    "<path style='fill:#8a92b2' d='m594.4 182.6 30 41.5V200z'/>",
+                    "<path style='fill:#62688f' d='M624.4 200v24.1l30-41.5z'/>"
+                )
+            );
+        } else {
+            return string(
+                abi.encodePacked(
+                    "<circle cx='173' cy='176.1' r='64' style='fill-rule:evenodd;clip-rule:evenodd;fill:#f9f9f9'/>",
+                    "<path style='fill:#8a92b2' d='M173 128.1 143 177l30-13.4z'/>",
+                    "<path style='fill:#62688f' d='M173 163.6 143 177l30 17.4zm30 13.4-30-48.9v35.5z'/>",
+                    "<path style='fill:#454a75' d='m173 194.4 30-17.4-30-13.4z'/>",
+                    "<path style='fill:#8a92b2' d='m143 182.6 30 41.5V200z'/>",
+                    "<path style='fill:#62688f' d='M173 200v24.1l30-41.5z'/>",
                 )
             );
         }
