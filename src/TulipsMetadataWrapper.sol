@@ -3,11 +3,11 @@ pragma solidity ^0.8.0;
 
 import "openzeppelin-contracts/utils/Strings.sol";
 
-import "./ContractDataStorage.sol";
+import "./DataStorage.sol";
 import "./SVGParser.sol";
-import "./CyberBrokersMetadata.sol";
+import "./TulipsMetadata.sol";
 
-interface ICyberBrokersMetadata {
+interface ITulipsMetadata {
   struct CyberBrokerLayer {
     string key;
     string attributeName;
@@ -22,16 +22,16 @@ interface ICyberBrokersMetadata {
   }
 }
 
-contract CyberBrokersMetadataWrapper is ICyberBrokersMetadata {
+contract TulipsMetadataWrapper is ITulipsMetadata {
   using Strings for uint256;
 
   // Storage contract, point back to all broker DNA, layers, and talents
-  CyberBrokersMetadata public metadataStorageContract;
+  TulipsMetadata public metadataStorageContract;
 
   constructor(
     address _metadataStorageContract
   ) {
-    metadataStorageContract = CyberBrokersMetadata(_metadataStorageContract);
+    metadataStorageContract = TulipsMetadata(_metadataStorageContract);
   }
 
   function layerMap(uint256 layerId) public view returns (CyberBrokerLayer memory) {
@@ -66,8 +66,8 @@ contract CyberBrokersMetadataWrapper is ICyberBrokersMetadata {
   uint256 constant private BROKER_LAYER_DNA_BITMASK = uint256(0x0FFF);
 
   // Contracts
-  function contractDataStorage() public view returns (ContractDataStorage) {
-    return metadataStorageContract.contractDataStorage();
+  function datastorage() public view returns (DataStorage) {
+    return metadataStorageContract.datastorage();
   }
 
   function svgParser() public view returns (SvgParser) {
@@ -311,11 +311,11 @@ contract CyberBrokersMetadataWrapper is ICyberBrokersMetadata {
     string[] memory layers = new string[](layerNumbers.length);
     for (uint256 layerIdx; layerIdx < layerNumbers.length; layerIdx++) {
       string memory key = layerMap(layerNumbers[layerIdx]).key;
-      require(contractDataStorage().hasKey(key), "Key does not exist in contract data storage");
+      require(datastorage().hasKey(key), "Key does not exist in contract data storage");
       layers[layerIdx] = key;
     }
 
-    return contractDataStorage().getDataForAll(layers);
+    return datastorage().getDataForAll(layers);
   }
 
   function getOffchainSvgParser()
@@ -334,8 +334,8 @@ contract CyberBrokersMetadataWrapper is ICyberBrokersMetadata {
    **/
   /*
 
-  function setContractDataStorageAddress(address _contractDataStorageAddress) public onlyOwner {
-    metadataStorageContract.setContractDataStorageAddress(_contractDataStorageAddress);
+  function setDataStorageAddress(address _DataStorageAddress) public onlyOwner {
+    metadataStorageContract.setDataStorageAddress(_DataStorageAddress);
   }
 
   function setSvgParserAddress(address _svgParserAddress) public onlyOwner {

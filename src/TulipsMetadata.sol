@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 import "openzeppelin-contracts/utils/Strings.sol";
 import "openzeppelin-contracts/access/Ownable.sol";
 
-import "./ContractDataStorage.sol";
+import "./DataStorage.sol";
 import "./SVGParser.sol";
 
-contract CyberBrokersMetadata is Ownable {
+contract TulipsMetadata is Ownable {
   using Strings for uint256;
 
   bool private _useOnChainMetadata = false;
@@ -54,20 +54,20 @@ contract CyberBrokersMetadata is Ownable {
   uint256 constant private BROKER_LAYER_DNA_BITMASK = uint256(0x0FFF);
 
   // Contracts
-  ContractDataStorage public contractDataStorage;
+  DataStorage public datastorage;
   SvgParser public svgParser;
 
   constructor(
-    address _contractDataStorageAddress,
+    address _DataStorageAddress,
     address _svgParserAddress
   ) {
     // Set the addresses
-    setContractDataStorageAddress(_contractDataStorageAddress);
+    setDataStorageAddress(_DataStorageAddress);
     setSvgParserAddress(_svgParserAddress);
   }
 
-  function setContractDataStorageAddress(address _contractDataStorageAddress) public onlyOwner {
-    contractDataStorage = ContractDataStorage(_contractDataStorageAddress);
+  function setDataStorageAddress(address _DataStorageAddress) public onlyOwner {
+    datastorage = DataStorage(_DataStorageAddress);
   }
 
   function setSvgParserAddress(address _svgParserAddress) public onlyOwner {
@@ -224,10 +224,10 @@ contract CyberBrokersMetadata is Ownable {
 
   function getBrokerName(uint256 _tokenId) public view returns (string memory) {
     string memory _key = 'broker-names';
-    require(contractDataStorage.hasKey(_key), "Broker names are not uploaded");
+    require(datastorage.hasKey(_key), "Broker names are not uploaded");
 
     // Get the broker names
-    bytes memory brokerNames = contractDataStorage.getData(_key);
+    bytes memory brokerNames = datastorage.getData(_key);
 
     // Pull the broker name size
     uint256 brokerNameSize = uint256(uint8(brokerNames[_tokenId * 31]));
@@ -389,7 +389,7 @@ contract CyberBrokersMetadata is Ownable {
     pure
     returns (string memory)
   {
-    return string("To render the token on-chain, call CyberBrokersMetadata.renderBroker(_tokenId, _startIndex) or CyberBrokersMetadata._renderBroker(_tokenId, _startIndex, _thresholdCounter) and iterate through the pages starting at _startIndex = 0. To render off-chain and use an off-chain renderer, call CyberBrokersMetadata.getTokenData(_tokenId) to get the raw data. A JavaScript parser is available by calling CyberBrokersMetadata.getOffchainSvgParser().");
+    return string("To render the token on-chain, call TulipsMetadata.renderBroker(_tokenId, _startIndex) or TulipsMetadata._renderBroker(_tokenId, _startIndex, _thresholdCounter) and iterate through the pages starting at _startIndex = 0. To render off-chain and use an off-chain renderer, call TulipsMetadata.getTokenData(_tokenId) to get the raw data. A JavaScript parser is available by calling TulipsMetadata.getOffchainSvgParser().");
   }
 
   function renderData(
@@ -418,8 +418,8 @@ contract CyberBrokersMetadata is Ownable {
       uint256
     )
   {
-    require(contractDataStorage.hasKey(_key));
-    return svgParser.parse(contractDataStorage.getData(_key), _startIndex, _thresholdCounter);
+    require(datastorage.hasKey(_key));
+    return svgParser.parse(datastorage.getData(_key), _startIndex, _thresholdCounter);
   }
 
   function renderBroker(
@@ -467,11 +467,11 @@ contract CyberBrokersMetadata is Ownable {
     string[] memory layers = new string[](layerNumbers.length);
     for (uint256 layerIdx; layerIdx < layerNumbers.length; layerIdx++) {
       string memory key = layerMap[layerNumbers[layerIdx]].key;
-      require(contractDataStorage.hasKey(key), "Key does not exist in contract data storage");
+      require(datastorage.hasKey(key), "Key does not exist in contract data storage");
       layers[layerIdx] = key;
     }
 
-    return contractDataStorage.getDataForAll(layers);
+    return datastorage.getDataForAll(layers);
   }
 
   function getOffchainSvgParser()
@@ -482,8 +482,8 @@ contract CyberBrokersMetadata is Ownable {
     )
   {
     string memory _key = 'svg-parser.js';
-    require(contractDataStorage.hasKey(_key), "Off-chain SVG Parser not uploaded");
-    return string(contractDataStorage.getData(_key));
+    require(datastorage.hasKey(_key), "Off-chain SVG Parser not uploaded");
+    return string(datastorage.getData(_key));
   }
 
 }

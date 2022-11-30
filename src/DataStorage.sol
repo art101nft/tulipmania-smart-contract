@@ -16,7 +16,7 @@ import "openzeppelin-contracts/access/Ownable.sol";
  *
  **/
 
-contract ContractDataStorage is Ownable {
+contract DataStorage is Ownable {
 
   struct ContractData {
     address rawContract;
@@ -46,7 +46,7 @@ contract ContractDataStorage is Ownable {
   }
 
   modifier onlyController() {
-    require(_controllers[_msgSender()], "ContractDataStorage: caller is not a controller");
+    require(_controllers[_msgSender()], "DataStorage: caller is not a controller");
     _;
   }
 
