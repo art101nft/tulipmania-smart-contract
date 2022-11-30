@@ -62,10 +62,35 @@ contract NFT is ERC721, Ownable {
         }
     }
 
+    function renderStyles() private view returns (string memory) {
+        return string(
+            abi.encodePacked(
+                "<style>",
+                "#startGradient{stop-color:#fad632}",
+                "#stopGradient{stop-color:#f40392}",
+                ".blb{fill:#4efe37}",
+                ".stm{fill:#bb55d0}",
+                ".fr{fill:#5f4a48}",
+                ".lnng{fill:#3c83b2}",
+                ".mtt{fill:#306bdd}",
+                ".shdw{opacity:.30;fill:#231f20}",
+                ".flwr{fill:#f9f9f9}",
+                "</style>"
+            )
+        );
+    }
+
     function renderSVG(uint256 tokenId) private pure returns (string memory) {
         return string(
             abi.encodePacked(
                 "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>",
+                // renderStyles,
+                // renderTopLeft,
+                // renderTopRight,
+                // renderBottomLeft,
+                // renderBottomRight,
+                // renderTulip,
+                // renderBackground,
                 "</svg>"
             )
         );
