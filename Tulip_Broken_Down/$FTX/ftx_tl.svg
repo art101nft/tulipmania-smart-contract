@@ -1,17 +1,1 @@
-<path id='SVGID_1_' d='M173 240.1c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z' style='fill:#231f20'/>
-<defs>
-    <path id='SVGID_00000178889941043828452660000010286109313819681438_' d='M173 240.1c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z'/>
-</defs>
-<clipPath id='SVGID_00000053531722262357141640000010015372643377570479_'>
-    <use xlink:href='#SVGID_00000178889941043828452660000010286109313819681438_' style='overflow:visible'/>
-</clipPath>
-<path id='SVGID_5_' style='fill-rule:evenodd;clip-rule:evenodd; fill:#5fcade' d='M158.9 194.7h17.6v17.6h-17.6z'/>
-<path id='SVGID_7_' style='fill:#5fcade' d='M136.9 187.9v-17.6h17.6v17.6z'/>
-<path id='SVGID_8_' style='fill:#5fcade' d='M158.9 187.9v-17.6h39.5v17.6z'/>
-<defs>
-    <path id='SVGID_00000085229239715380565810000009010076197586334597_' d='M136.9 170.3h17.6v17.6h-17.6z'/>
-</defs>
-<clipPath id='SVGID_00000007394450906041372910000014311000038527048320_'>
-    <use xlink:href='#SVGID_00000085229239715380565810000009010076197586334597_' style='overflow:visible'/>
-</clipPath>
-<path id='SVGID_11_' style='fill-rule:evenodd;clip-rule:evenodd; fill:#5fcade' d='M158.9 145.8H213v17.6h-54.1z'/>
+<path id='SVGID_1_' d='M173 240.1c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z' style='fill:#231f20'/><defs>    <path id='SVGID_00000178889941043828452660000010286109313819681438_' d='M173 240.1c-35.3 0-64-28.7-64-64s28.7-64 64-64 64 28.7 64 64-28.7 64-64 64z'/></defs><clipPath id='SVGID_00000053531722262357141640000010015372643377570479_'>    <use xlink:href='#SVGID_00000178889941043828452660000010286109313819681438_' style='overflow:visible'/></clipPath><path id='SVGID_5_' style='fill-rule:evenodd;clip-rule:evenodd; fill:#5fcade' d='M158.9 194.7h17.6v17.6h-17.6z'/><path id='SVGID_7_' style='fill:#5fcade' d='M136.9 187.9v-17.6h17.6v17.6z'/><path id='SVGID_8_' style='fill:#5fcade' d='M158.9 187.9v-17.6h39.5v17.6z'/><defs>    <path id='SVGID_00000085229239715380565810000009010076197586334597_' d='M136.9 170.3h17.6v17.6h-17.6z'/></defs><clipPath id='SVGID_00000007394450906041372910000014311000038527048320_'>    <use xlink:href='#SVGID_00000085229239715380565810000009010076197586334597_' style='overflow:visible'/></clipPath><path id='SVGID_11_' style='fill-rule:evenodd;clip-rule:evenodd; fill:#5fcade' d='M158.9 145.8H213v17.6h-54.1z'/>
