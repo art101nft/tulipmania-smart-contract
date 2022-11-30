@@ -9,21 +9,21 @@ import {Strings} from "openzeppelin-contracts/utils/Strings.sol";
 
 contract NFT is ERC721, Ownable {
 
-    mapping(uint256 => string) internal PaletteData;
-    mapping(uint256 => mapping(uint256 => string)) internal CornerData;
-    mapping(uint256 => string) internal TulipPieceData;
+    mapping(uint256 => string) public PaletteData;
+    mapping(uint256 => mapping(uint256 => string)) public SymbolData;
+    mapping(uint256 => string) public TulipData;
 
-    // -------------- corner data
+    // -------------- symbol data
     // 0 - APE
     // 1 - BTC
     // 2 - DAI
     // 3 - DOGE
     // 4 - ETH
     // ...
-    //   - 0 - top left
-    //   - 1 - top right
-    //   - 2 - bottom left
-    //   - 3 - bottom right
+    //   - 0 - bottom left
+    //   - 1 - bottom right
+    //   - 2 - top left
+    //   - 3 - top right
 
     // -------------- tulip data
     // 0 - background
@@ -37,12 +37,30 @@ contract NFT is ERC721, Ownable {
     // 8 - tulip stem
     
     uint256 public currentTokenId;
+    uint256 public numPaletteColors;
+    uint256 public numSymbols;
     uint256 public mintPrice = 0.025 ether;
 
     constructor(
         string memory _name,
         string memory _symbol
     ) ERC721(_name, _symbol) {}
+
+    function updatePaletteData(string[] calldata colorCodes) external onlyOwner {
+        for (uint256 i; i < colorCodes.length; i++) {
+            PaletteData[i] = colorCodes[i];
+        }
+        numPaletteColors = colorCodes.length;
+    }
+
+    function updateSymbolData(uint256 symbolIndex, string[] calldata symbolSVGData) external onlyOwner {
+        for (uint256 i; i < symbolSVGData.length; i++) {
+            SymbolData[symbolIndex][i] = symbolSVGData[i];
+        }
+        if (symbolIndex > numSymbols) {
+            numSymbols = symbolIndex;
+        }
+    }
 
     function renderSVG(uint256 tokenId) private pure returns (string memory) {
         return string(
