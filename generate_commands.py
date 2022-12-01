@@ -89,10 +89,16 @@ if __name__ == '__main__':
 
     # Parse SVG data
     if getenv('SVG'):
+
+        _npc = contract.functions.numPaletteColors().call()
+        _nsm = contract.functions.numSymbols().call()
+        _ntp = contract.functions.numTulipParts().call()
+        print(f'[+] Found {_npc} palette colors, {_nsm} symbols, and {_ntp} tulip pieces on the contract')
         r = contract.functions.tokenURI(1).call()
         data = json.loads(b64decode("".join(r.split(',')[1:])))
         svg = b64decode("".join(data['image_data'].split(',')[1:]))
-        print(svg)
+        with open('out.svg', 'wb') as _f:
+            _f.write(svg)
 
     if getenv('GO'):
         nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
