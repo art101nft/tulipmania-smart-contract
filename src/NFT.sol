@@ -66,9 +66,7 @@ contract NFT is ERC721, Ownable {
         for (uint256 i; i < symbolSVGData.length; i++) {
             SymbolData[symbolIndex][i] = symbolSVGData[i];
         }
-        if (symbolIndex > numSymbols) {
-            numSymbols = symbolIndex;
-        }
+        numSymbols++;
     }
 
     function updateTulipData(string[] calldata tulipParts) external onlyOwner {
@@ -126,12 +124,12 @@ contract NFT is ERC721, Ownable {
         return string(
             abi.encodePacked(
                 "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>",
-                renderStyles(0, 1, 2, 3, 4, 5, 6),
+                renderStyles(0 + tokenId, 1 + tokenId, 2 + tokenId, 3 + tokenId, 4 + tokenId, 5 + tokenId, 6 + tokenId),
                 renderTulip(),
-                SymbolData[0][0],
-                SymbolData[1][1],
-                SymbolData[8][2],
-                SymbolData[16][3],
+                SymbolData[0 + tokenId][0],
+                SymbolData[1 + tokenId][1],
+                SymbolData[8 + tokenId][2],
+                SymbolData[16 + tokenId][3],
                 "</svg>"
             )
         );
