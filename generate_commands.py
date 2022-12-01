@@ -72,19 +72,22 @@ if __name__ == '__main__':
 
     # Calculate gas
     if getenv('CHECK'):
+        gwei = 15
         print('[+] Checking gas consumption requirements')
         total_gas = []
+        print(f'2000000 gas to deploy contract')
+        total_gas.append(2000000)
         r = contract.functions.updatePaletteData(palette_data).estimate_gas()
-        # print(f'{r} gas to push palette data')
+        print(f'{r} gas to push palette data')
         total_gas.append(r)
         for i in symbol_data:
             r = contract.functions.updateSymbolData(i, symbol_data[i]).estimate_gas()
-            # print(f'{r} gas to push symbol {i} data ({len(symbol_data[i])} pieces)')
+            print(f'{r} gas to push symbol {i} data ({len(symbol_data[i])} pieces)')
             total_gas.append(r)
         r = contract.functions.updateTulipData(tulip_data).estimate_gas()
-        # print(f'{r} gas to push tulip data')
+        print(f'{r} gas to push tulip data')
         total_gas.append(r)
-        print(f'You will need {sum(total_gas)} gas to upload all the SVG data. That is approximately {w3.fromWei((sum(total_gas) * 20), "gwei")} ETH at 20 gwei')
+        print(f'You will need {sum(total_gas)} gas to upload all the SVG data. That is approximately {w3.fromWei((sum(total_gas) * gwei), "gwei")} ETH at {gwei} gwei')
 
     # Push SVG data into the contract
     if getenv('PUSH'):
