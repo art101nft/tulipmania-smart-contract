@@ -1,1 +1,1 @@
-<linearGradient id="a" gradientUnits="userSpaceOnUse" x1="400" y1="1146" x2="400" y2="54"><stop offset=".002" id="startGradient"/><stop offset="1" id="stopGradient"/></linearGradient><path style="fill:url(#a)" d="M50 54h700v1092H50z"/>
+<linearGradient id='a' gradientUnits='userSpaceOnUse' x1='400' y1='1146' x2='400' y2='54'><stop offset='.002' id='startGradient'/><stop offset='1' id='stopGradient'/></linearGradient><path style='fill:url(#a)' d='M50 54h700v1092H50z'/>
