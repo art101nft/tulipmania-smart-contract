@@ -39,14 +39,22 @@ contract NFT is ERC721, Ownable {
     uint256 public currentTokenId;
     uint256 public numPaletteColors;
     uint256 public numSymbols;
+    uint256 public numTulipParts;
     uint256 public mintPrice = 0.025 ether;
+    bool public lockChanges = false;
 
     constructor(
         string memory _name,
         string memory _symbol
     ) ERC721(_name, _symbol) {}
 
+
+    /*
+    * Update data stored within the contract
+    */
+
     function updatePaletteData(string[] calldata colorCodes) external onlyOwner {
+        require(lockChanges == false, "cannot change data");
         for (uint256 i; i < colorCodes.length; i++) {
             PaletteData[i] = colorCodes[i];
         }
@@ -54,6 +62,7 @@ contract NFT is ERC721, Ownable {
     }
 
     function updateSymbolData(uint256 symbolIndex, string[] calldata symbolSVGData) external onlyOwner {
+        require(lockChanges == false, "cannot change data");
         for (uint256 i; i < symbolSVGData.length; i++) {
             SymbolData[symbolIndex][i] = symbolSVGData[i];
         }
@@ -62,50 +71,92 @@ contract NFT is ERC721, Ownable {
         }
     }
 
-    function renderStyles() private view returns (string memory) {
+    function updateTulipData(string[] calldata tulipParts) external onlyOwner {
+        require(lockChanges == false, "cannot change data");
+        for (uint256 i; i < tulipParts.length; i++) {
+            TulipData[i] = tulipParts[i];
+        }
+        numTulipParts = tulipParts.length;
+    }
+
+
+    /*
+    * Rendering SVG contents
+    */
+
+    function renderStyles(
+        uint256 gradient1,
+        uint256 gradient2,
+        uint256 bulb,
+        uint256 stem,
+        uint256 fur,
+        uint256 lining,
+        uint256 matte
+    ) private view returns (string memory) {
         return string(
             abi.encodePacked(
-                "<style>",
-                "#startGradient{stop-color:#fad632}",
-                "#stopGradient{stop-color:#f40392}",
-                ".blb{fill:#4efe37}",
-                ".stm{fill:#bb55d0}",
-                ".fr{fill:#5f4a48}",
-                ".lnng{fill:#3c83b2}",
-                ".mtt{fill:#306bdd}",
-                ".shdw{opacity:.30;fill:#231f20}",
-                ".flwr{fill:#f9f9f9}",
-                "</style>"
+                abi.encodePacked(
+                    "<style>",
+                    "#startGradient{stop-color:#", PaletteData[gradient1], "}",
+                    "#stopGradient{stop-color:#", PaletteData[gradient2], "}",
+                    ".blb{fill:#", PaletteData[bulb], "}",
+                    ".stm{fill:#", PaletteData[stem], "}",
+                    ".fr{fill:#", PaletteData[fur], "}"
+                ),
+                abi.encodePacked(
+                    ".lnng{fill:#", PaletteData[lining], "}",
+                    ".mtt{fill:#", PaletteData[matte], "}",
+                    ".shdw{opacity:.30;fill:#231f20}",
+                    ".flwr{fill:#f9f9f9}",
+                    "</style>"
+                )
             )
         );
     }
 
-    function renderSVG(uint256 tokenId) private pure returns (string memory) {
+    function renderTulip() private view returns (string memory) {
+        bytes memory output;
+        for (uint256 i; i < numTulipParts; i++) {
+            output = abi.encodePacked(output, TulipData[i]);
+        }
+        return string(output);
+    }
+
+    function renderSVG(uint256 tokenId) private view returns (string memory) {
         return string(
             abi.encodePacked(
                 "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>",
-                // renderStyles,
-                // renderTopLeft,
-                // renderTopRight,
-                // renderBottomLeft,
-                // renderBottomRight,
-                // renderTulip,
-                // renderBackground,
+                renderStyles(0, 1, 2, 3, 4, 5, 6),
+                // SymbolData[0][0],
+                // SymbolData[1][1],
+                // SymbolData[8][2],
+                // SymbolData[16][3],
+                renderTulip(),
                 "</svg>"
             )
         );
     }
+
+
+    /*
+    * Minting
+    */
 
     function mint() public payable {
         uint256 newItemId = ++currentTokenId;
         _safeMint(msg.sender, newItemId);
     }
 
+
+    /*
+    * Meta
+    */
+
     function totalSupply() public view returns (uint256 supply) {
         return currentTokenId;
     }
 
-    function tokenURI(uint256 tokenId) public pure override returns (string memory) {
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {
         require(tokenId <= 10000, "Invalid tokenId");
         string memory json = Base64.encode(
             bytes(
