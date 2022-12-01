@@ -12,29 +12,6 @@ contract NFT is ERC721, Ownable {
     mapping(uint256 => string) public PaletteData;
     mapping(uint256 => mapping(uint256 => string)) public SymbolData;
     mapping(uint256 => string) public TulipData;
-
-    // -------------- symbol data
-    // 0 - APE
-    // 1 - BTC
-    // 2 - DAI
-    // 3 - DOGE
-    // 4 - ETH
-    // ...
-    //   - 0 - bottom left
-    //   - 1 - bottom right
-    //   - 2 - top left
-    //   - 3 - top right
-
-    // -------------- tulip data
-    // 0 - background
-    // 1 - bulb
-    // 2 - center stem
-    // 3 - fur
-    // 4 - leaf back
-    // 5 - leaf lining
-    // 6 - canvas background
-    // 7 - tulip shadow
-    // 8 - tulip stem
     
     uint256 public currentTokenId;
     uint256 public numPaletteColors;
