@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 
-import json
 from web3 import Web3
+
+import json
+from base64 import b64decode
 from os import getenv, path
 from glob import glob
+
+net = getenv('NET').upper()
 
 def get_eth_contract(_ca, _rp):
     compiled_contract_path = path.abspath(_rp)
@@ -47,41 +51,58 @@ def sendit(w3, t, nonce):
     t['from'] = w3.eth.defaultAccount
     t['nonce'] = nonce
     nonce += 1
-    s = w3.eth.account.sign_transaction(t, private_key=getenv('TESTNET_KEY'))
+    s = w3.eth.account.sign_transaction(t, private_key=getenv(f'{net}_KEY'))
     w3.eth.send_raw_transaction(s.rawTransaction)
     return s.hash
 
 if __name__ == '__main__':
-    if not getenv('TESTNET_CONTRACT') or not getenv('TESTNET_KEY') or not getenv('TESTNET_RPC'):
+    if not getenv(f'{net}_CONTRACT') or not getenv(f'{net}_KEY') or not getenv(f'{net}_RPC'):
         print('invalid env vars set')
         exit()
     
-    WEB3_PROVIDER_URI = getenv('TESTNET_RPC')
+    WEB3_PROVIDER_URI = getenv(f'{net}_RPC')
     w3 = Web3(Web3.HTTPProvider(WEB3_PROVIDER_URI))
-    w3.eth.defaultAccount = w3.eth.account.from_key(getenv('TESTNET_KEY')).address
+    w3.eth.defaultAccount = w3.eth.account.from_key(getenv(f'{net}_KEY')).address
     palette_data = get_palette_data()
+    print(f'[+] Found {len(palette_data)} colors for the palette')
     symbol_data = get_symbol_data()
+    print(f'[+] Found {len(symbol_data)} symbols/logos/text ({len(symbol_data) * 4} options possible with top, bottom, left, right)')
     tulip_data = get_tulip_data()
-    contract = get_eth_contract(getenv('TESTNET_CONTRACT'), './out/NFT.sol/NFT.json')
+    print(f'[+] Found {len(tulip_data)} tulip pieces')
+    contract = get_eth_contract(getenv(f'{net}_CONTRACT'), './out/NFT.sol/NFT.json')
 
-    # total_gas = []
-    # r = contract.functions.updatePaletteData(palette_data).estimate_gas()
-    # total_gas.append(r)
-    # for i in symbol_data:
-    #     r = contract.functions.updateSymbolData(i, symbol_data[i]).estimate_gas()
-    #     total_gas.append(r)
-    # r = contract.functions.updateTulipData(tulip_data).estimate_gas()
-    # total_gas.append(r)
+    # Calculate gas
+    if getenv('CHECK'):
+        print('[+] Checking gas consumption requirements')
+        total_gas = []
+        r = contract.functions.updatePaletteData(palette_data).estimate_gas()
+        print(f'{r} gas to push palette data')
+        total_gas.append(r)
+        for i in symbol_data:
+            r = contract.functions.updateSymbolData(i, symbol_data[i]).estimate_gas()
+            print(f'{r} gas to push symbol {i} data ({len(symbol_data[i])} pieces)')
+            total_gas.append(r)
+        r = contract.functions.updateTulipData(tulip_data).estimate_gas()
+        print(f'{r} gas to push tulip data')
+        total_gas.append(r)
+        print(f'You will need {sum(total_gas)} gas to upload all the SVG data. That is approximately {w3.fromWei((sum(total_gas) * 20), "gwei")} ETH at 20 gwei')
 
-    nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
+    # Parse SVG data
+    if getenv('SVG'):
+        r = contract.functions.tokenURI(1).call()
+        data = json.loads(b64decode("".join(r.split(',')[1:])))
+        svg = b64decode("".join(data['image_data'].split(',')[1:]))
+        print(svg)
 
-    r = sendit(w3, contract.functions.updatePaletteData(palette_data).build_transaction(), nonce)
-    print(f'sent tx {r} with nonce {nonce}')
-    nonce += 1
-    for i in symbol_data:
-        r = sendit(w3, contract.functions.updateSymbolData(i, symbol_data[i]).build_transaction(), nonce)
+    if getenv('GO'):
+        nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
+        r = sendit(w3, contract.functions.updatePaletteData(palette_data).build_transaction(), nonce)
         print(f'sent tx {r} with nonce {nonce}')
         nonce += 1
-    r = sendit(w3, contract.functions.updateTulipData(tulip_data).build_transaction(), nonce)
-    print(f'sent tx {r} with nonce {nonce}')
-    nonce += 1
+        for i in symbol_data:
+            r = sendit(w3, contract.functions.updateSymbolData(i, symbol_data[i]).build_transaction(), nonce)
+            print(f'sent tx {r} with nonce {nonce}')
+            nonce += 1
+        r = sendit(w3, contract.functions.updateTulipData(tulip_data).build_transaction(), nonce)
+        print(f'sent tx {r} with nonce {nonce}')
+        nonce += 1
