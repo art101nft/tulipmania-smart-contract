@@ -127,11 +127,11 @@ contract NFT is ERC721, Ownable {
             abi.encodePacked(
                 "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>",
                 renderStyles(0, 1, 2, 3, 4, 5, 6),
+                renderTulip(),
                 SymbolData[0][0],
                 SymbolData[1][1],
                 SymbolData[8][2],
                 SymbolData[16][3],
-                renderTulip(),
                 "</svg>"
             )
         );
