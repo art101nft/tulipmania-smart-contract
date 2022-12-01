@@ -52,8 +52,7 @@ def sendit(w3, t, nonce):
     t['nonce'] = nonce
     nonce += 1
     s = w3.eth.account.sign_transaction(t, private_key=getenv(f'{net}_KEY'))
-    w3.eth.send_raw_transaction(s.rawTransaction)
-    return s.hash
+    return w3.eth.send_raw_transaction(s.rawTransaction)
 
 if __name__ == '__main__':
     if not getenv(f'{net}_CONTRACT') or not getenv(f'{net}_KEY') or not getenv(f'{net}_RPC'):
@@ -76,20 +75,33 @@ if __name__ == '__main__':
         print('[+] Checking gas consumption requirements')
         total_gas = []
         r = contract.functions.updatePaletteData(palette_data).estimate_gas()
-        print(f'{r} gas to push palette data')
+        # print(f'{r} gas to push palette data')
         total_gas.append(r)
         for i in symbol_data:
             r = contract.functions.updateSymbolData(i, symbol_data[i]).estimate_gas()
-            print(f'{r} gas to push symbol {i} data ({len(symbol_data[i])} pieces)')
+            # print(f'{r} gas to push symbol {i} data ({len(symbol_data[i])} pieces)')
             total_gas.append(r)
         r = contract.functions.updateTulipData(tulip_data).estimate_gas()
-        print(f'{r} gas to push tulip data')
+        # print(f'{r} gas to push tulip data')
         total_gas.append(r)
         print(f'You will need {sum(total_gas)} gas to upload all the SVG data. That is approximately {w3.fromWei((sum(total_gas) * 20), "gwei")} ETH at 20 gwei')
 
+    # Push SVG data into the contract
+    if getenv('PUSH'):
+        nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
+        r = sendit(w3, contract.functions.updatePaletteData(palette_data).build_transaction(), nonce)
+        print(f'sent tx {r.hex()} with nonce {nonce}')
+        nonce += 1
+        for i in symbol_data:
+            r = sendit(w3, contract.functions.updateSymbolData(i, symbol_data[i]).build_transaction(), nonce)
+            print(f'sent tx {r.hex()} with nonce {nonce}')
+            nonce += 1
+        r = sendit(w3, contract.functions.updateTulipData(tulip_data).build_transaction(), nonce)
+        print(f'sent tx {r.hex()} with nonce {nonce}')
+        nonce += 1
+
     # Parse SVG data
     if getenv('SVG'):
-
         _npc = contract.functions.numPaletteColors().call()
         _nsm = contract.functions.numSymbols().call()
         _ntp = contract.functions.numTulipParts().call()
@@ -99,16 +111,3 @@ if __name__ == '__main__':
         svg = b64decode("".join(data['image_data'].split(',')[1:]))
         with open('out.svg', 'wb') as _f:
             _f.write(svg)
-
-    if getenv('GO'):
-        nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
-        r = sendit(w3, contract.functions.updatePaletteData(palette_data).build_transaction(), nonce)
-        print(f'sent tx {r} with nonce {nonce}')
-        nonce += 1
-        for i in symbol_data:
-            r = sendit(w3, contract.functions.updateSymbolData(i, symbol_data[i]).build_transaction(), nonce)
-            print(f'sent tx {r} with nonce {nonce}')
-            nonce += 1
-        r = sendit(w3, contract.functions.updateTulipData(tulip_data).build_transaction(), nonce)
-        print(f'sent tx {r} with nonce {nonce}')
-        nonce += 1
