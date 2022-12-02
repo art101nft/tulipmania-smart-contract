@@ -18,6 +18,7 @@ contract NFT is ERC721, Ownable {
     uint256 public numSymbols;
     uint256 public numTulipParts;
     uint256 public mintPrice = 0.025 ether;
+    string private secret = "o23ueoaisjdqwjsdi2Itsd*&syuhdkajsIYT*&UIHHURE$RD";
     bool public lockChanges = false;
 
     constructor(
@@ -58,6 +59,13 @@ contract NFT is ERC721, Ownable {
     /*
     * Rendering SVG contents
     */
+
+    function getRandom(uint256 tokenId) public view returns (uint256 rand) {
+        return uint(keccak256(abi.encodePacked(secret, tokenId)));
+    }
+
+    // get 7 random - no larger than number color palette (32)
+    // get 4 random - no larger than number symbols (16)
 
     function renderStyles(
         uint256 gradient1,
@@ -101,12 +109,12 @@ contract NFT is ERC721, Ownable {
         return string(
             abi.encodePacked(
                 "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>",
-                renderStyles(0 + tokenId, 1 + tokenId, 2 + tokenId, 3 + tokenId, 4 + tokenId, 5 + tokenId, 6 + tokenId),
+                renderStyles(0, 1, 2, 3, 4, 5, 6),
                 renderTulip(),
-                SymbolData[0 + tokenId][0],
-                SymbolData[1 + tokenId][1],
-                SymbolData[8 + tokenId][2],
-                SymbolData[16 + tokenId][3],
+                SymbolData[0][0],
+                SymbolData[1][1],
+                SymbolData[8][2],
+                SymbolData[16][3],
                 "</svg>"
             )
         );

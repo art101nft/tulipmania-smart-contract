@@ -70,6 +70,13 @@ if __name__ == '__main__':
     print(f'[+] Found {len(tulip_data)} tulip pieces')
     contract = get_eth_contract(getenv(f'{net}_CONTRACT'), './out/NFT.sol/NFT.json')
 
+    print(contract.functions.getRandom(1).call() % 9)
+    print(contract.functions.getRandom(2).call() % 9)
+    print(contract.functions.getRandom(3).call() % 9)
+    print(contract.functions.getRandom(4).call() % 9)
+    print(contract.functions.getRandom(5).call() % 9)
+    print(contract.functions.getRandom(6).call() % 9)
+
     # Calculate gas
     if getenv('CHECK'):
         gwei = 15
