@@ -44,7 +44,10 @@ contract NFT is ERC721, Ownable {
         for (uint256 i; i < symbolSVGData.length; i++) {
             SymbolData[symbolIndex][i] = symbolSVGData[i];
         }
-        numSymbols++;
+        if(symbolIndex + 1 > numSymbols) {
+            numSymbols = symbolIndex + 1;
+        }
+
     }
 
     function updateTulipData(string[] calldata tulipParts) external onlyOwner {
@@ -60,35 +63,40 @@ contract NFT is ERC721, Ownable {
     * Rendering SVG contents
     */
 
-    function getRandom(uint256 tokenId) public view returns (uint256 rand) {
-        return uint(keccak256(abi.encodePacked(secret, tokenId)));
+    function getRandomColors(uint256 tokenId) public view returns (uint256[7] memory rands) {
+        string[7] memory data = ["startGradient", "stopGradient", "bulb", "stem", "fur", "lining", "matte"];
+        uint256[7] memory _rands;
+        for(uint256 i; i < data.length; i++) {
+            uint256 rand = uint(keccak256(abi.encodePacked(secret, data[i], tokenId)));
+            _rands[i] = rand % numPaletteColors;
+        }
+        return _rands;
     }
 
-    // get 7 random - no larger than number color palette (32)
-    // get 4 random - no larger than number symbols (16)
+    function getRandomSymbols(uint256 tokenId) public view returns (uint256[4] memory rands) {
+        string[4] memory data = ["bottomleft", "bottomright", "topleft", "topright"];
+        uint256[4] memory _rands;
+        for(uint256 i; i < data.length; i++) {
+            uint256 rand = uint(keccak256(abi.encodePacked(secret, data[i], tokenId)));
+            _rands[i] = rand % numSymbols;
+        }
+        return _rands;
+    }
 
-    function renderStyles(
-        uint256 gradient1,
-        uint256 gradient2,
-        uint256 bulb,
-        uint256 stem,
-        uint256 fur,
-        uint256 lining,
-        uint256 matte
-    ) private view returns (string memory) {
+    function renderStyles(uint256[7] memory colorIds) private view returns (string memory) {
         return string(
             abi.encodePacked(
                 abi.encodePacked(
                     "<style>",
-                    "#startGradient{stop-color:#", PaletteData[gradient1], "}",
-                    "#stopGradient{stop-color:#", PaletteData[gradient2], "}",
-                    ".blb{fill:#", PaletteData[bulb], "}",
-                    ".stm{fill:#", PaletteData[stem], "}",
-                    ".fr{fill:#", PaletteData[fur], "}"
+                    "#startGradient{stop-color:#", PaletteData[colorIds[0]], "}",
+                    "#stopGradient{stop-color:#", PaletteData[colorIds[1]], "}",
+                    ".blb{fill:#", PaletteData[colorIds[2]], "}",
+                    ".stm{fill:#", PaletteData[colorIds[3]], "}",
+                    ".fr{fill:#", PaletteData[colorIds[4]], "}"
                 ),
                 abi.encodePacked(
-                    ".lnng{fill:#", PaletteData[lining], "}",
-                    ".mtt{fill:#", PaletteData[matte], "}",
+                    ".lnng{fill:#", PaletteData[colorIds[5]], "}",
+                    ".mtt{fill:#", PaletteData[colorIds[6]], "}",
                     ".shdw{opacity:.30;fill:#231f20}",
                     ".flwr{fill:#f9f9f9}",
                     "</style>"
@@ -105,16 +113,26 @@ contract NFT is ERC721, Ownable {
         return string(output);
     }
 
+    function renderSymbols(uint256[4] memory symbolIds) private view returns (string memory) {
+        return string(
+            abi.encodePacked(
+                SymbolData[symbolIds[0]][0],
+                SymbolData[symbolIds[1]][1],
+                SymbolData[symbolIds[2]][2],
+                SymbolData[symbolIds[3]][3]
+            )
+        );
+    }
+
     function renderSVG(uint256 tokenId) private view returns (string memory) {
+        uint256[7] memory styleColors = getRandomColors(tokenId);
+        uint256[4] memory symbols = getRandomSymbols(tokenId);
         return string(
             abi.encodePacked(
                 "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>",
-                renderStyles(0, 1, 2, 3, 4, 5, 6),
+                renderStyles(styleColors),
                 renderTulip(),
-                SymbolData[0][0],
-                SymbolData[1][1],
-                SymbolData[8][2],
-                SymbolData[16][3],
+                renderSymbols(symbols),
                 "</svg>"
             )
         );

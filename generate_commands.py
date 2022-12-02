@@ -70,13 +70,6 @@ if __name__ == '__main__':
     print(f'[+] Found {len(tulip_data)} tulip pieces')
     contract = get_eth_contract(getenv(f'{net}_CONTRACT'), './out/NFT.sol/NFT.json')
 
-    print(contract.functions.getRandom(1).call() % 9)
-    print(contract.functions.getRandom(2).call() % 9)
-    print(contract.functions.getRandom(3).call() % 9)
-    print(contract.functions.getRandom(4).call() % 9)
-    print(contract.functions.getRandom(5).call() % 9)
-    print(contract.functions.getRandom(6).call() % 9)
-
     # Calculate gas
     if getenv('CHECK'):
         gwei = 15
@@ -116,8 +109,11 @@ if __name__ == '__main__':
         _nsm = contract.functions.numSymbols().call()
         _ntp = contract.functions.numTulipParts().call()
         print(f'[+] Found {_npc} palette colors, {_nsm} symbols, and {_ntp} tulip pieces on the contract')
-        r = contract.functions.tokenURI(1).call()
-        data = json.loads(b64decode("".join(r.split(',')[1:])))
-        svg = b64decode("".join(data['image_data'].split(',')[1:]))
-        with open('out.svg', 'wb') as _f:
-            _f.write(svg)
+        ts = contract.functions.totalSupply().call()
+        print(f'[+] Found total supply of {ts}')
+        for i in range(1, ts + 1):
+            r = contract.functions.tokenURI(i).call()
+            data = json.loads(b64decode("".join(r.split(',')[1:])))
+            svg = b64decode("".join(data['image_data'].split(',')[1:]))
+            with open(f'outs/{i}.svg', 'wb') as _f:
+                _f.write(svg)
