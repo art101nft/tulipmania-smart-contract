@@ -12,5 +12,4 @@ out/
 
 # Python stuff
 .venv
-data.txt
-out.svg
+outs
