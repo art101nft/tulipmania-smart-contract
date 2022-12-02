@@ -12,14 +12,16 @@ contract NFT is ERC721, Ownable {
     mapping(uint256 => string) public PaletteData;
     mapping(uint256 => mapping(uint256 => string)) public SymbolData;
     mapping(uint256 => string) public TulipData;
+
+    uint256 constant public MAX_SUPPLY = 5555;
     
+    bool public lockChanges;
     uint256 public currentTokenId;
     uint256 public numPaletteColors;
     uint256 public numSymbols;
     uint256 public numTulipParts;
-    uint256 public mintPrice = 0.025 ether;
-    string private secret = "o23ueoaisjdqwjsdi2Itsd*&syuhdkajsIYT*&UIHHURE$RD";
-    bool public lockChanges = false;
+    uint256 public mintPrice = 0.1 ether;
+    string private secret;
 
     constructor(
         string memory _name,
@@ -28,8 +30,29 @@ contract NFT is ERC721, Ownable {
 
 
     /*
+    * Minting
+    */
+
+    function mint() public payable {
+        // variable amount to mint
+        // require funds
+        uint256 newItemId = ++currentTokenId;
+        _safeMint(msg.sender, newItemId);
+    }
+
+
+    /*
     * Update data stored within the contract
     */
+
+    function updateMintPrice(uint256 amount) external onlyOwner {
+        mintPrice = amount;
+    }
+
+    function updateSecret(string memory val) external onlyOwner {
+        require(lockChanges == false, "cannot change data");
+        secret = val;
+    }
 
     function updatePaletteData(string[] calldata colorCodes) external onlyOwner {
         require(lockChanges == false, "cannot change data");
@@ -63,9 +86,9 @@ contract NFT is ERC721, Ownable {
     * Rendering SVG contents
     */
 
-    function getRandomColors(uint256 tokenId) public view returns (uint256[7] memory rands) {
-        string[7] memory data = ["startGradient", "stopGradient", "bulb", "stem", "fur", "lining", "matte"];
-        uint256[7] memory _rands;
+    function getRandomColors(uint256 tokenId) public view returns (uint256[6] memory rands) {
+        string[6] memory data = ["startGradient", "stopGradient", "bulb", "stem", "fur", "lining", "matte"];
+        uint256[6] memory _rands;
         for(uint256 i; i < data.length; i++) {
             uint256 rand = uint(keccak256(abi.encodePacked(secret, data[i], tokenId)));
             _rands[i] = rand % numPaletteColors;
@@ -83,7 +106,7 @@ contract NFT is ERC721, Ownable {
         return _rands;
     }
 
-    function renderStyles(uint256[7] memory colorIds) private view returns (string memory) {
+    function renderStyles(uint256[6] memory colorIds) private view returns (string memory) {
         return string(
             abi.encodePacked(
                 abi.encodePacked(
@@ -91,14 +114,14 @@ contract NFT is ERC721, Ownable {
                     "#startGradient{stop-color:#", PaletteData[colorIds[0]], "}",
                     "#stopGradient{stop-color:#", PaletteData[colorIds[1]], "}",
                     ".blb{fill:#", PaletteData[colorIds[2]], "}",
-                    ".stm{fill:#", PaletteData[colorIds[3]], "}",
-                    ".fr{fill:#", PaletteData[colorIds[4]], "}"
+                    ".stm{fill:#", PaletteData[colorIds[3]], "}"
                 ),
                 abi.encodePacked(
-                    ".lnng{fill:#", PaletteData[colorIds[5]], "}",
-                    ".mtt{fill:#", PaletteData[colorIds[6]], "}",
+                    ".lnng{fill:#", PaletteData[colorIds[4]], "}",
+                    ".mtt{fill:#", PaletteData[colorIds[5]], "}",
                     ".shdw{opacity:.30;fill:#231f20}",
                     ".flwr{fill:#f9f9f9}",
+                    ".fr{fill:#5f4a48}",
                     "</style>"
                 )
             )
@@ -125,7 +148,7 @@ contract NFT is ERC721, Ownable {
     }
 
     function renderSVG(uint256 tokenId) private view returns (string memory) {
-        uint256[7] memory styleColors = getRandomColors(tokenId);
+        uint256[6] memory styleColors = getRandomColors(tokenId);
         uint256[4] memory symbols = getRandomSymbols(tokenId);
         return string(
             abi.encodePacked(
@@ -136,16 +159,6 @@ contract NFT is ERC721, Ownable {
                 "</svg>"
             )
         );
-    }
-
-
-    /*
-    * Minting
-    */
-
-    function mint() public payable {
-        uint256 newItemId = ++currentTokenId;
-        _safeMint(msg.sender, newItemId);
     }
 
 
