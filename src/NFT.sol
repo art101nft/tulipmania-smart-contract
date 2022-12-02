@@ -86,11 +86,15 @@ contract NFT is ERC721, Ownable {
     * Rendering SVG contents
     */
 
+    function getRandomUint(string memory data, uint256 tokenId) private view returns (uint256 rand) {
+        return uint256(keccak256(abi.encodePacked(secret, data, tokenId)));
+    }
+
     function getRandomColors(uint256 tokenId) public view returns (uint256[6] memory rands) {
-        string[6] memory data = ["startGradient", "stopGradient", "bulb", "stem", "fur", "lining", "matte"];
+        string[6] memory data = ["startGradient", "stopGradient", "bulb", "stem", "lining", "matte"];
         uint256[6] memory _rands;
         for(uint256 i; i < data.length; i++) {
-            uint256 rand = uint(keccak256(abi.encodePacked(secret, data[i], tokenId)));
+            uint256 rand = getRandomUint(data[i], tokenId);
             _rands[i] = rand % numPaletteColors;
         }
         return _rands;
@@ -100,7 +104,7 @@ contract NFT is ERC721, Ownable {
         string[4] memory data = ["bottomleft", "bottomright", "topleft", "topright"];
         uint256[4] memory _rands;
         for(uint256 i; i < data.length; i++) {
-            uint256 rand = uint(keccak256(abi.encodePacked(secret, data[i], tokenId)));
+            uint256 rand = getRandomUint(data[i], tokenId);
             _rands[i] = rand % numSymbols;
         }
         return _rands;
