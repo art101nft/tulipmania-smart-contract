@@ -159,7 +159,10 @@ contract NFT is ERC721, Ownable {
                     renderStyle("stem", "fill", 10, getRandomColors(tokenId, "stem")),
                     renderStyle("leaf-lining", "fill", 12, getRandomColors(tokenId, "leaf-lining")),
                     renderStyle("matte", "fill", 8, getRandomColors(tokenId, "matte")),
-                    renderStyle("animatedBackground", "fill", 8, getRandomColors(tokenId, "animatedBackground"))
+                    renderStyle("startGradientStop1", "stop-color", 8, getRandomColors(tokenId, "startGradientStop1")),
+                    renderStyle("startGradientStop2", "stop-color", 8, getRandomColors(tokenId, "startGradientStop2")),
+                    renderStyle("stopGradientStop1", "stop-color", 8, getRandomColors(tokenId, "stopGradientStop1")),
+                    renderStyle("stopGradientStop2", "stop-color", 8, getRandomColors(tokenId, "stopGradientStop2"))
                 ),
                 "</style>"      
             )
