@@ -90,9 +90,14 @@ contract NFT is ERC721, Ownable {
         return uint256(keccak256(abi.encodePacked(secret, data, tokenId)));
     }
 
-    function getRandomColors(uint256 tokenId) public view returns (uint256[6] memory rands) {
-        string[6] memory data = ["startGradient", "stopGradient", "bulb", "stem", "lining", "matte"];
-        uint256[6] memory _rands;
+    function getRandomColors(uint256 tokenId, string memory salt) public view returns (uint256[4] memory rands) {
+        string[4] memory data = [
+            string(abi.encodePacked(salt, "1")), 
+            string(abi.encodePacked(salt, "2")), 
+            string(abi.encodePacked(salt, "3")), 
+            string(abi.encodePacked(salt, "4"))
+        ];
+        uint256[4] memory _rands;
         for(uint256 i; i < data.length; i++) {
             uint256 rand = getRandomUint(data[i], tokenId);
             _rands[i] = rand % numPaletteColors;
@@ -110,24 +115,50 @@ contract NFT is ERC721, Ownable {
         return _rands;
     }
 
-    function renderStyles(uint256[6] memory colorIds) private view returns (string memory) {
+    function renderStyle(
+        string memory className, 
+        string memory animationType,
+        uint256 duration,
+        uint256[4] memory colorIds
+    ) private view returns (string memory) {
         return string(
             abi.encodePacked(
                 abi.encodePacked(
-                    "<style>",
-                    "#startGradient{stop-color:#", PaletteData[colorIds[0]], "}",
-                    "#stopGradient{stop-color:#", PaletteData[colorIds[1]], "}",
-                    ".blb{fill:#", PaletteData[colorIds[2]], "}",
-                    ".stm{fill:#", PaletteData[colorIds[3]], "}"
+                    ".", className, 
+                    "{animation: ", className, 
+                    " ", Strings.toString(duration), 
+                    "s ease alternate infinite } ",
+                    "@keyframes ", className
                 ),
                 abi.encodePacked(
-                    ".lnng{fill:#", PaletteData[colorIds[4]], "}",
-                    ".mtt{fill:#", PaletteData[colorIds[5]], "}",
-                    ".shdw{opacity:.30;fill:#231f20}",
-                    ".flwr{fill:#f9f9f9}",
-                    ".fr{fill:#5f4a48}",
-                    "</style>"
+                    " { 0% { ", animationType, ": #", PaletteData[colorIds[0]], 
+                    "} 33% { ", animationType, ": #", PaletteData[colorIds[1]], 
+                    " } 66% { ", animationType, ": #", PaletteData[colorIds[2]], 
+                    "} 100% { ", animationType, ": #", PaletteData[colorIds[3]], 
+                    "} }"
                 )
+            )
+        );
+    }
+
+    function renderStyles(uint256 tokenId) private view returns (string memory) {
+        return string(
+            abi.encodePacked(
+                "<style>",
+                abi.encodePacked(
+                    renderStyle("stem", "fill", 10, getRandomColors(tokenId, "stem")),
+                    renderStyle("leaf-lining", "fill", 12, getRandomColors(tokenId, "leaf-lining"))
+                ),
+                abi.encodePacked(
+                    renderStyle("matte", "fill", 8, getRandomColors(tokenId, "matte")),
+                    renderStyle("startGradientStop1", "stop-color", 20, getRandomColors(tokenId, "startGradientStop1")),
+                    renderStyle("startGradientStop2", "stop-color", 22, getRandomColors(tokenId, "startGradientStop2"))
+                ),
+                 abi.encodePacked(
+                    renderStyle("stopGradientStop1", "stop-color", 18, getRandomColors(tokenId, "stopGradientStop1")),
+                    renderStyle("stopGradientStop2", "stop-color", 20, getRandomColors(tokenId, "stopGradientStop2"))
+                ),
+                "</style>"      
             )
         );
     }
@@ -152,12 +183,11 @@ contract NFT is ERC721, Ownable {
     }
 
     function renderSVG(uint256 tokenId) private view returns (string memory) {
-        uint256[6] memory styleColors = getRandomColors(tokenId);
         uint256[4] memory symbols = getRandomSymbols(tokenId);
         return string(
             abi.encodePacked(
                 "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1200' style='enable-background:new 0 0 800 1200' xml:space='preserve'>",
-                renderStyles(styleColors),
+                renderStyles(tokenId),
                 renderTulip(),
                 renderSymbols(symbols),
                 "</svg>"
