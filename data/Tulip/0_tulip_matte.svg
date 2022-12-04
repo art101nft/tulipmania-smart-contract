@@ -1,1 +1,2 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" style="enable-background:new 0 0 800 1200" xml:space="preserve"><path d="M0 0h800v1200H0z"><animate attributeName="fill" values="#yyyyyy;#xxxxxx;#xxxxxx;#yyyyyy;" dur="10s" repeatCount="indefinite" /></path></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" style="enable-background:new 0 0 800 1200" xml:space="preserve">
+<path d="M0 0h800v1200H0z" id="matte"></path></svg>

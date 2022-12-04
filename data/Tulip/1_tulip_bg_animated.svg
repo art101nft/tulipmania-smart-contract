@@ -1,8 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200"><defs><linearGradient id="a" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="979.796" y2="979.796" gradientTransform="matrix(.71443 0 0 1.11452 50 54)"><stop offset="0" stop-color="#yyyyyy">
-   <animate attributeName="stop-color" values=" ##yyyyyy;#xxxxxx;#xxxxxx;#xxxxxx;#xxxxxx;#yyyyyy;" dur="20s" repeatCount="indefinite"/></stop><stop offset=".5" stop-color="#yyyyyy">
-<animate attributeName="stop-color" values="#yyyyyy;#xxxxxx;#xxxxxx;#xxxxxx;#xxxxxx;#yyyyyy;" dur="20s" repeatCount="indefinite"/></stop><stop offset="1" stop-color="#yyyyyy">
-<animate attributeName="stop-color" values="##yyyyyy;#xxxxxx;#xxxxxx;#xxxxxx;#xxxxxx;#yyyyyy;" dur="20s" repeatCount="indefinite"/></stop>
-<animateTransform attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="20s" repeatCount="indefinite"/></linearGradient><linearGradient id="b" gradientUnits="userSpaceOnUse" x1="0" y1="979.796" x2="979.796" y2="979.796" gradientTransform="matrix(.71443 0 0 1.11452 50 54)"><stop offset="0" stop-color="#yyyyyy">
-<animate attributeName="stop-color" values="##yyyyyy;#xxxxxx;#xxxxxx;#xxxxxx;#xxxxxx;#yyyyyy;" dur="20s" repeatCount="indefinite"/></stop><stop offset="1" stop-color="#yyyyyy" stop-opacity="0">
-<animate attributeName="stop-color" values="##yyyyyy;#xxxxxx;#xxxxxx;#xxxxxx;#xxxxxx;#yyyyyy;" dur="20s" repeatCount="indefinite"/></stop>
-<animateTransform attributeName="gradientTransform" type="rotate" values="360 .5 .5;0 .5 .5" dur="10s" repeatCount="indefinite"/></linearGradient></defs><rect width="87.5%" height="91%" style="fill:url(#a);" x="50" y="54"/><rect width="87.5%" height="91%" style="fill:url(#b);" x="50" y="54"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200">
+   <defs>
+      <linearGradient id="startGradient" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="979.796" y2="979.796" gradientTransform="matrix(.71443 0 0 1.11452 50 54)">
+         <stop offset="0" id="startGradientStop1"></stop>
+         <stop offset="1" id="startGradientStop2"></stop>
+         <animateTransform attributeName="gradientTransform" type="rotate" from="0 .5 .5" to="360 .5 .5" dur="20s" repeatCount="indefinite"/>
+      </linearGradient>
+      <linearGradient id="stopGradient" gradientUnits="userSpaceOnUse" x1="0" y1="979.796" x2="979.796" y2="979.796" gradientTransform="matrix(.71443 0 0 1.11452 50 54)">
+         <stop offset="0" id="stopGradientStop1"></stop>
+         <stop offset="1" id="stopGradientStop2" stop-opacity="0"></stop>
+         <animateTransform attributeName="gradientTransform" type="rotate" values="360 .5 .5;0 .5 .5" dur="10s" repeatCount="indefinite"/>
+      </linearGradient>
+   </defs>
+   <rect width="87.5%" height="91%" style="fill:url(#startGradient);" x="50" y="54"/>
+   <rect width="87.5%" height="91%" style="fill:url(#stopGradient);" x="50" y="54"/>
+</svg>
