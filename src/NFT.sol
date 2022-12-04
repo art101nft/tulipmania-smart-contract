@@ -16,28 +16,43 @@ contract NFT is ERC721, Ownable {
     uint256 constant public MAX_SUPPLY = 5555;
     
     bool public lockChanges;
+    bool public ownerMinted;
+    uint256 public ownerMintAmount = 20;
     uint256 public currentTokenId;
     uint256 public numPaletteColors;
     uint256 public numSymbols;
     uint256 public numTulipParts;
-    uint256 public mintPrice = 0.1 ether;
-    string private secret;
+    uint256 public mintPrice = 0.01637 ether;
+    string public secret;
 
-    constructor(
-        string memory _name,
-        string memory _symbol
-    ) ERC721(_name, _symbol) {}
+    constructor(string memory _secret) ERC721("Tulip Mania", "TULIP") {
+        updateSecret(_secret);
+        ownerMint();
+    }
 
 
     /*
     * Minting
     */
 
-    function mint() public payable {
-        // variable amount to mint
-        // require funds
+    function _mintTulip() private {
         uint256 newItemId = ++currentTokenId;
         _safeMint(msg.sender, newItemId);
+    }
+
+    function ownerMint() private onlyOwner {
+        require(ownerMinted == false, "owner already minted");
+        for(uint256 i; i < ownerMintAmount; i++) {
+            _mintTulip();
+        }
+        ownerMinted = true;
+    }
+
+    function mint(uint256 amount) external payable {
+        require(msg.value == mintPrice * amount, "not enough ether sent");
+        for(uint256 i; i < amount; i++) {
+            _mintTulip();
+        }
     }
 
 
@@ -49,7 +64,7 @@ contract NFT is ERC721, Ownable {
         mintPrice = amount;
     }
 
-    function updateSecret(string memory val) external onlyOwner {
+    function updateSecret(string memory val) public onlyOwner {
         require(lockChanges == false, "cannot change data");
         secret = val;
     }
@@ -218,7 +233,7 @@ contract NFT is ERC721, Ownable {
                     abi.encodePacked(
                         '{"name": "Tulip #', 
                         Strings.toString(tokenId), 
-                        '", "description": "this is a test.", "image_data": "data:image/svg+xml;base64,', 
+                        '", "description": "Tulip Mania!", "image_data": "data:image/svg+xml;base64,', 
                         Base64.encode(bytes(renderSVG(tokenId))), 
                         '"}'
                     )
