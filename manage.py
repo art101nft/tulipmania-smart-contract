@@ -19,7 +19,7 @@ def get_eth_contract(_ca, _rp):
     return w3.eth.contract(address=w3.toChecksumAddress(_ca), abi=contract_abi)
 
 def get_svg_contents(svg: str) -> str:
-    soup = BeautifulSoup(svg, 'lxml')
+    soup = BeautifulSoup(svg, 'xml')
     return "".join([str(i).strip() for i in soup.svg.children])
 
 def get_palette_data():
