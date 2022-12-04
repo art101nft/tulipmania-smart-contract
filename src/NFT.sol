@@ -149,20 +149,17 @@ contract NFT is ERC721, Ownable {
                     ".wht {fill: white; animation: btw 10s ease alternate infinite} ",
                     ".blck {fill: black; animation: wtb 10s ease alternate infinite} ",
                     "@keyframes btw { 0% { fill: #231f20 } 25% { fill: #f9f9f9 } 50% { fill: #231f20} 75% { fill: #f9f9f9 } 100% { fill: #231f20} } ",
-                    "@keyframes wtb { 0% { fill: #f9f9f9 } 25% { fill: #231f20 } 50% { fill: #f9f9f9} 75% { fill: #231f20 } 100% { fill: #f9f9f9} } "
+                    "@keyframes wtb { 0% { fill: #f9f9f9 } 25% { fill: #231f20 } 50% { fill: #f9f9f9} 75% { fill: #231f20 } 100% { fill: #f9f9f9} } ",
+                    "#startGradient {animation: startGradient 8s ease alternate infinite} ",
+                    "@keyframes startGradient { 0% { transform: rotate(0) } 50%{ transform: rotate(45deg) } 100%{ transform: rotate(90deg) } } ",
+                    "#stopGradient {animation: stopGradient 8s ease alternate infinite} ",
+                    "@keyframes stopGradient { 0% { transform: rotate(90deg) } 50%{ transform: rotate(45deg) } 100%{ transform: rotate(0) } } "
                 ),
                 abi.encodePacked(
                     renderStyle("stem", "fill", 10, getRandomColors(tokenId, "stem")),
-                    renderStyle("leaf-lining", "fill", 12, getRandomColors(tokenId, "leaf-lining"))
-                ),
-                abi.encodePacked(
+                    renderStyle("leaf-lining", "fill", 12, getRandomColors(tokenId, "leaf-lining")),
                     renderStyle("matte", "fill", 8, getRandomColors(tokenId, "matte")),
-                    renderStyle("startGradientStop1", "stop-color", 20, getRandomColors(tokenId, "startGradientStop1")),
-                    renderStyle("startGradientStop2", "stop-color", 22, getRandomColors(tokenId, "startGradientStop2"))
-                ),
-                 abi.encodePacked(
-                    renderStyle("stopGradientStop1", "stop-color", 18, getRandomColors(tokenId, "stopGradientStop1")),
-                    renderStyle("stopGradientStop2", "stop-color", 20, getRandomColors(tokenId, "stopGradientStop2"))
+                    renderStyle("animatedBackground", "fill", 8, getRandomColors(tokenId, "animatedBackground"))
                 ),
                 "</style>"      
             )
