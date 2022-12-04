@@ -135,7 +135,7 @@ contract NFT is ERC721, Ownable {
                     "} 33% { ", animationType, ": #", PaletteData[colorIds[1]], 
                     " } 66% { ", animationType, ": #", PaletteData[colorIds[2]], 
                     "} 100% { ", animationType, ": #", PaletteData[colorIds[3]], 
-                    "} }"
+                    "} } "
                 )
             )
         );
@@ -145,6 +145,12 @@ contract NFT is ERC721, Ownable {
         return string(
             abi.encodePacked(
                 "<style>",
+                abi.encodePacked(
+                    ".wht {fill: white; animation: btw 10s ease alternate infinite} ",
+                    ".blck {fill: black; animation: wtb 10s ease alternate infinite} ",
+                    "@keyframes btw { 0% { fill: #231f20 } 25% { fill: #f9f9f9 } 50% { fill: #231f20} 75% { fill: #f9f9f9 } 100% { fill: #231f20} } ",
+                    "@keyframes wtb { 0% { fill: #f9f9f9 } 25% { fill: #231f20 } 50% { fill: #f9f9f9} 75% { fill: #231f20 } 100% { fill: #f9f9f9} } "
+                ),
                 abi.encodePacked(
                     renderStyle("stem", "fill", 10, getRandomColors(tokenId, "stem")),
                     renderStyle("leaf-lining", "fill", 12, getRandomColors(tokenId, "leaf-lining"))
