@@ -284,6 +284,16 @@ contract NFT is ERC721A, Ownable {
     * Meta
     */
 
+    function approve(address to, uint256 tokenId) public payable virtual override {
+        require(mintingAllowed == false, "cannot allow approvals while still minting");
+        super.approve(to, tokenId);
+    }
+
+    function setApprovalForAll(address operator, bool approved) public virtual override {
+        require(mintingAllowed == false, "cannot allow approvals while still minting");
+        super.setApprovalForAll(operator, approved);
+    }
+
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         string memory json = Base64.encode(
             bytes(

@@ -136,6 +136,22 @@ contract NFTsolmate is Test {
         vm.expectRevert();
         payable(address(nft)).transfer(1 ether);
     }
+
+    function testApprovalsWorkAfterStopping() public {
+        startHoax(o);
+        nft.startMinting();
+        assertEq(nft.isApprovedForAll(address(o), address(1)), false);
+        vm.expectRevert(bytes("cannot allow approvals while still minting"));
+        nft.setApprovalForAll(address(1), true);
+        assertEq(nft.getApproved(1), address(0));
+        vm.expectRevert(bytes("cannot allow approvals while still minting"));
+        nft.approve(address(1), 1);
+        nft.stopMinting();
+        nft.setApprovalForAll(address(1), true);
+        assertEq(nft.isApprovedForAll(address(o), address(1)), true);
+        nft.approve(address(1), 1);
+        assertEq(nft.getApproved(1), address(1));
+    }
 }
 
 // Zarnold Edward Quigley
