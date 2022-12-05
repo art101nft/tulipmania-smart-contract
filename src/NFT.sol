@@ -17,7 +17,7 @@ contract NFT is ERC721A, Ownable {
     bool public ownerMinted;
     bool public mintingAllowed;
     address public deployer;
-    uint256 public ownerMintAmount = 20;
+    uint256 public ownerMintAmount = 200;
     uint256 public numPaletteColors;
     uint256 public numSymbols;
     uint256 public numTulipParts;

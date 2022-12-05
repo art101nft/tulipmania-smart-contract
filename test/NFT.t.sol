@@ -9,6 +9,7 @@ contract NFTsolmate is Test {
 
     NFT public nft;
     uint256 mp;
+    uint256 oma;
     address og;
     address o = address(0xdead);
     address t = address(0xbeef);
@@ -18,6 +19,7 @@ contract NFTsolmate is Test {
         og = nft.deployer();
         nft.transferOwnership(o);
         mp = nft.mintPrice();
+        oma = nft.ownerMintAmount();
     }
 
     function testFailMintingFailsUnlessStarted() public {
@@ -39,14 +41,14 @@ contract NFTsolmate is Test {
         nft.startMinting();
         hoax(t);
         nft.mint{value: mp * 80}(80);
-        assertEq(nft.totalSupply(), 100);
+        assertEq(nft.totalSupply(), 80 + oma);
     }
 
     function testStartMintingMintsToOwner() public {
         hoax(o);
         nft.startMinting();
-        assertEq(nft.totalSupply(), 20);
-        assertEq(nft.balanceOf(o), 20);
+        assertEq(nft.totalSupply(), oma);
+        assertEq(nft.balanceOf(o), oma);
     }
 
     function testOnlyOwnerFunctions() public {
