@@ -49,7 +49,7 @@ contract NFT is ERC721, Ownable {
         payable(msg.sender).transfer(address(this).balance);
     }
 
-    function () public payable {
+    receive () external payable {
         payable(deployer).transfer(address(this).balance);
     }
 
@@ -63,7 +63,7 @@ contract NFT is ERC721, Ownable {
         _safeMint(msg.sender, newItemId);
     }
 
-    function ownerMint() private onlyOwner {
+    function ownerMint() private {
         require(ownerMinted == false, "owner already minted");
         for(uint256 i; i < ownerMintAmount; i++) {
             _mintTulip();
