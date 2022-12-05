@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-import {ERC721} from "solmate/tokens/ERC721.sol";
+import {ERC721A} from "erc721a/ERC721A.sol";
 import {Ownable} from "openzeppelin-contracts/access/Ownable.sol";
 import {Base64} from "openzeppelin-contracts/utils/Base64.sol";
 import {Strings} from "openzeppelin-contracts/utils/Strings.sol";
 
 
-contract NFT is ERC721, Ownable {
+contract NFT is ERC721A, Ownable {
 
     mapping(uint256 => string) public PaletteData;
     mapping(uint256 => mapping(uint256 => string)) public SymbolData;
@@ -18,14 +18,13 @@ contract NFT is ERC721, Ownable {
     bool public mintingAllowed;
     address public deployer;
     uint256 public ownerMintAmount = 20;
-    uint256 public currentTokenId;
     uint256 public numPaletteColors;
     uint256 public numSymbols;
     uint256 public numTulipParts;
     uint256 public mintPrice = 0.01637 ether;
     string public secret;
 
-    constructor(string memory _secret) ERC721("Tulip Mania", "TULIP") {
+    constructor(string memory _secret) ERC721A("Tulip Mania", "TULIP") {
         secret = _secret;
         deployer = msg.sender;
     }
@@ -35,8 +34,10 @@ contract NFT is ERC721, Ownable {
     */
 
     function startMinting() external onlyOwner {
+        require(ownerMinted == false, "owner already minted");
         mintingAllowed = true;
-        ownerMint();
+        _safeMint(msg.sender, ownerMintAmount);
+        ownerMinted = true;
     }
 
     function stopMinting() external onlyOwner {
@@ -49,31 +50,16 @@ contract NFT is ERC721, Ownable {
     function withdraw() public onlyOwner {
         payable(msg.sender).transfer(address(this).balance);
     }
-    
+
 
     /*
     * Minting
     */
 
-    function _mintTulip() private {
-        uint256 newItemId = ++currentTokenId;
-        _safeMint(msg.sender, newItemId);
-    }
-
-    function ownerMint() private {
-        require(ownerMinted == false, "owner already minted");
-        for(uint256 i; i < ownerMintAmount; i++) {
-            _mintTulip();
-        }
-        ownerMinted = true;
-    }
-
     function mint(uint256 amount) external payable {
         require(mintingAllowed == true, "minting not allowed");
         require(msg.value == mintPrice * amount, "not enough ether sent");
-        for(uint256 i; i < amount; i++) {
-            _mintTulip();
-        }
+        _safeMint(msg.sender, amount);
     }
 
 
@@ -297,10 +283,6 @@ contract NFT is ERC721, Ownable {
     /*
     * Meta
     */
-
-    function totalSupply() public view returns (uint256 supply) {
-        return currentTokenId;
-    }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
         string memory json = Base64.encode(
