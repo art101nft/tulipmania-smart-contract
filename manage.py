@@ -123,6 +123,8 @@ if __name__ == '__main__':
         for i in range(1, ts + 1):
             r = contract.functions.tokenURI(i).call()
             data = json.loads(b64decode("".join(r.split(',')[1:])))
+            with open(f'outs/{i}.json', 'w') as _f:
+                _f.write(json.dumps(data))
             svg = b64decode("".join(data['image_data'].split(',')[1:]))
             with open(f'outs/{i}.svg', 'wb') as _f:
                 _f.write(svg)
