@@ -177,6 +177,64 @@ contract NFT is ERC721, Ownable {
         );
     }
 
+    function renderMetadata(uint256 tokenId) private view returns (string memory) {
+        uint256[4] memory stemColors = getRandomColors(tokenId, "stem");
+        uint256[4] memory liningColors = getRandomColors(tokenId, "leaf-lining");
+        uint256[4] memory matteColors = getRandomColors(tokenId, "matte");
+        uint256[4] memory startGradient1Colors = getRandomColors(tokenId, "startGradientStop1");
+        uint256[4] memory startGradient2Colors = getRandomColors(tokenId, "startGradientStop2");
+        uint256[4] memory stopGradient1Colors = getRandomColors(tokenId, "stopGradientStop1");
+        uint256[4] memory stopGradient2Colors = getRandomColors(tokenId, "stopGradientStop2");
+        return string(
+            abi.encodePacked(
+                '[{"trait_type": "StemColors", "value": "',
+                abi.encodePacked(
+                    '#', PaletteData[stemColors[0]],
+                    ',#', PaletteData[stemColors[1]],
+                    ',#', PaletteData[stemColors[2]],
+                    ',#', PaletteData[stemColors[3]]
+                ),
+                '"}, {"trait_type": "LiningColors", "value": "',
+                abi.encodePacked(
+                    '#', PaletteData[liningColors[0]],
+                    ',#', PaletteData[liningColors[1]],
+                    ',#', PaletteData[liningColors[2]],
+                    ',#', PaletteData[liningColors[3]]
+                ),
+                '"}, {"trait_type": "matteColors", "value": "',
+                abi.encodePacked(
+                    '#', PaletteData[matteColors[0]],
+                    ',#', PaletteData[matteColors[1]],
+                    ',#', PaletteData[matteColors[2]],
+                    ',#', PaletteData[matteColors[3]]
+                ),
+                '"}, {"trait_type": "startGradientColors", "value": "',
+                abi.encodePacked(
+                    '#', PaletteData[startGradient1Colors[0]],
+                    ',#', PaletteData[startGradient1Colors[1]],
+                    ',#', PaletteData[startGradient1Colors[2]],
+                    ',#', PaletteData[startGradient1Colors[3]],
+                    ',#', PaletteData[startGradient2Colors[0]],
+                    ',#', PaletteData[startGradient2Colors[1]],
+                    ',#', PaletteData[startGradient2Colors[2]],
+                    ',#', PaletteData[startGradient2Colors[3]]
+                ),
+                '"}, {"trait_type": "stopGradientColors", "value": "',
+                abi.encodePacked(
+                    '#', PaletteData[stopGradient1Colors[0]],
+                    ',#', PaletteData[stopGradient1Colors[1]],
+                    ',#', PaletteData[stopGradient1Colors[2]],
+                    ',#', PaletteData[stopGradient1Colors[3]],
+                    ',#', PaletteData[stopGradient2Colors[0]],
+                    ',#', PaletteData[stopGradient2Colors[1]],
+                    ',#', PaletteData[stopGradient2Colors[2]],
+                    ',#', PaletteData[stopGradient2Colors[3]]
+                ),
+                '"}]'
+            )
+        );
+    }
+
     function renderTulip() private view returns (string memory) {
         bytes memory output;
         for (uint256 i; i < numTulipParts; i++) {
@@ -219,16 +277,16 @@ contract NFT is ERC721, Ownable {
     }
 
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(tokenId <= 10000, "Invalid tokenId");
         string memory json = Base64.encode(
             bytes(
                 string(
                     abi.encodePacked(
-                        '{"name": "Tulip #', 
-                        Strings.toString(tokenId), 
-                        '", "description": "Tulip Mania!", "image_data": "data:image/svg+xml;base64,', 
-                        Base64.encode(bytes(renderSVG(tokenId))), 
-                        '"}'
+                        '{"name": "Tulip #', Strings.toString(tokenId), '"',
+                        ', "description": "No-coiners are meme-ing tulips again and youve spent the last 2 years buyin em. Why not mint one? Tulip Mania is generative, animated, and on-chain, vector Trash Art. No blocklist, no allowlist, no promises, and no royalties. The content is cc0 and low on rarity. Its art!"',
+                        ', "attributes": ', renderMetadata(tokenId),
+                        ', "image_data": "data:image/svg+xml;base64,', 
+                        Base64.encode(bytes(renderSVG(tokenId))), '"',
+                        '}'
                     )
                 )
             )
