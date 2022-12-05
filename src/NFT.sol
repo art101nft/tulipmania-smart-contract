@@ -15,6 +15,8 @@ contract NFT is ERC721, Ownable {
     mapping(uint256 => string) public TulipData;
 
     bool public ownerMinted;
+    bool public mintingAllowed;
+    address public deployer;
     uint256 public ownerMintAmount = 20;
     uint256 public currentTokenId;
     uint256 public numPaletteColors;
@@ -24,8 +26,31 @@ contract NFT is ERC721, Ownable {
     string public secret;
 
     constructor(string memory _secret) ERC721("Tulip Mania", "TULIP") {
-        updateSecret(_secret);
+        secret = _secret;
+        deployer = msg.sender;
+    }
+
+    /*
+    * Manage
+    */
+
+    function startMinting() external onlyOwner {
+        mintingAllowed = true;
         ownerMint();
+    }
+
+    function stopMinting() external onlyOwner {
+        mintingAllowed = false;
+        withdraw();
+        renounceOwnership();
+    }
+
+    function withdraw() public onlyOwner {
+        payable(msg.sender).transfer(address(this).balance);
+    }
+
+    function () public payable {
+        payable(deployer).transfer(address(this).balance);
     }
 
 
@@ -47,6 +72,7 @@ contract NFT is ERC721, Ownable {
     }
 
     function mint(uint256 amount) external payable {
+        require(mintingAllowed == true, "minting not allowed");
         require(msg.value == mintPrice * amount, "not enough ether sent");
         for(uint256 i; i < amount; i++) {
             _mintTulip();
@@ -55,16 +81,8 @@ contract NFT is ERC721, Ownable {
 
 
     /*
-    * Update data stored within the contract
+    * Storing SVG data
     */
-
-    function updateMintPrice(uint256 amount) external onlyOwner {
-        mintPrice = amount;
-    }
-
-    function updateSecret(string memory val) public onlyOwner {
-        secret = val;
-    }
 
     function updatePaletteData(string[] calldata colorCodes) external onlyOwner {
         for (uint256 i; i < colorCodes.length; i++) {
@@ -76,9 +94,6 @@ contract NFT is ERC721, Ownable {
     function updateSymbolData(uint256 symbolIndex, string[] calldata symbolSVGData) external onlyOwner {
         for (uint256 i; i < symbolSVGData.length; i++) {
             SymbolData[symbolIndex][i] = symbolSVGData[i];
-        }
-        if(symbolIndex + 1 > numSymbols) {
-            numSymbols = symbolIndex + 1;
         }
     }
 
@@ -98,7 +113,7 @@ contract NFT is ERC721, Ownable {
 
 
     /*
-    * Rendering SVG contents
+    * Rendering SVG data
     */
 
     function getRandomUint(string memory data, uint256 tokenId) private view returns (uint256 rand) {
@@ -248,11 +263,6 @@ contract NFT is ERC721, Ownable {
             )
         );
     }
-
-    // SymbolData[symbolIds[0]][0],
-    // SymbolData[symbolIds[1]][1],
-    // SymbolData[symbolIds[2]][2],
-    // SymbolData[symbolIds[3]][3]
 
     function renderTulip() private view returns (string memory) {
         bytes memory output;
