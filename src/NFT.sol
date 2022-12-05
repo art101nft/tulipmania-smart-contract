@@ -13,9 +13,6 @@ contract NFT is ERC721, Ownable {
     mapping(uint256 => mapping(uint256 => string)) public SymbolData;
     mapping(uint256 => string) public TulipData;
 
-    uint256 constant public MAX_SUPPLY = 5555;
-    
-    bool public lockChanges;
     bool public ownerMinted;
     uint256 public ownerMintAmount = 20;
     uint256 public currentTokenId;
@@ -65,12 +62,10 @@ contract NFT is ERC721, Ownable {
     }
 
     function updateSecret(string memory val) public onlyOwner {
-        require(lockChanges == false, "cannot change data");
         secret = val;
     }
 
     function updatePaletteData(string[] calldata colorCodes) external onlyOwner {
-        require(lockChanges == false, "cannot change data");
         for (uint256 i; i < colorCodes.length; i++) {
             PaletteData[i] = colorCodes[i];
         }
@@ -78,7 +73,6 @@ contract NFT is ERC721, Ownable {
     }
 
     function updateSymbolData(uint256 symbolIndex, string[] calldata symbolSVGData) external onlyOwner {
-        require(lockChanges == false, "cannot change data");
         for (uint256 i; i < symbolSVGData.length; i++) {
             SymbolData[symbolIndex][i] = symbolSVGData[i];
         }
@@ -89,7 +83,6 @@ contract NFT is ERC721, Ownable {
     }
 
     function updateTulipData(string[] calldata tulipParts) external onlyOwner {
-        require(lockChanges == false, "cannot change data");
         for (uint256 i; i < tulipParts.length; i++) {
             TulipData[i] = tulipParts[i];
         }
