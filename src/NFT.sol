@@ -11,6 +11,7 @@ contract NFT is ERC721, Ownable {
 
     mapping(uint256 => string) public PaletteData;
     mapping(uint256 => mapping(uint256 => string)) public SymbolData;
+    mapping(uint256 => string) public SymbolNames;
     mapping(uint256 => string) public TulipData;
 
     bool public ownerMinted;
@@ -79,7 +80,13 @@ contract NFT is ERC721, Ownable {
         if(symbolIndex + 1 > numSymbols) {
             numSymbols = symbolIndex + 1;
         }
+    }
 
+    function updateSymbolNames(string[] calldata symbolNames) external onlyOwner {
+        for (uint256 i; i < symbolNames.length; i++) {
+            SymbolNames[i] = symbolNames[i];
+        }
+        numSymbols = symbolNames.length;
     }
 
     function updateTulipData(string[] calldata tulipParts) external onlyOwner {
@@ -185,6 +192,7 @@ contract NFT is ERC721, Ownable {
         uint256[4] memory startGradient2Colors = getRandomColors(tokenId, "startGradientStop2");
         uint256[4] memory stopGradient1Colors = getRandomColors(tokenId, "stopGradientStop1");
         uint256[4] memory stopGradient2Colors = getRandomColors(tokenId, "stopGradientStop2");
+        uint256[4] memory symbolIds = getRandomSymbols(tokenId);
         return string(
             abi.encodePacked(
                 '[{"trait_type": "StemColors", "value": "',
@@ -230,10 +238,21 @@ contract NFT is ERC721, Ownable {
                     ',#', PaletteData[stopGradient2Colors[2]],
                     ',#', PaletteData[stopGradient2Colors[3]]
                 ),
+                abi.encodePacked(
+                    '"}, {"trait_type": "BottomLeft", "value": "', SymbolNames[symbolIds[0]],
+                    '"}, {"trait_type": "BottomRight", "value": "', SymbolNames[symbolIds[1]],
+                    '"}, {"trait_type": "TopLeft", "value": "', SymbolNames[symbolIds[2]],
+                    '"}, {"trait_type": "TopRight", "value": "', SymbolNames[symbolIds[3]]
+                ),
                 '"}]'
             )
         );
     }
+
+    // SymbolData[symbolIds[0]][0],
+    // SymbolData[symbolIds[1]][1],
+    // SymbolData[symbolIds[2]][2],
+    // SymbolData[symbolIds[3]][3]
 
     function renderTulip() private view returns (string memory) {
         bytes memory output;

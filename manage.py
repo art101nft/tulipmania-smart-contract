@@ -32,17 +32,18 @@ def get_palette_data():
     return codes
 
 def get_symbol_data():
-    from time import sleep
     idx = 0
     symbols = {}
+    names = []
     for subdir in sorted(glob('./data/Symbols/*')):
+        names.append(path.basename(subdir))
         symbols[idx] = []
         for svg in sorted(glob(path.join(subdir, '*.svg'))):
             with open(svg, 'r') as f:
                 _f = get_svg_contents(f.read())
                 symbols[idx].append(_f)
         idx += 1
-    return symbols
+    return (symbols, names)
 
 def get_tulip_data():
     tulips = []
@@ -68,8 +69,9 @@ if __name__ == '__main__':
     # get the data from local SVG
     palette_data = get_palette_data()
     print(f'[+] Found {len(palette_data)} colors for the palette')
-    symbol_data = get_symbol_data()
-    print(f'[+] Found {len(symbol_data)} symbols/logos/text ({len(symbol_data) * 4} options possible with top, bottom, left, right)')
+    symbol_data = get_symbol_data()[0]
+    symbol_names = get_symbol_data()[1]
+    print(f'[+] Found {len(symbol_data)} symbols ({len(symbol_data) * 4} options possible with top, bottom, left, right)')
     tulip_data = get_tulip_data()
     print(f'[+] Found {len(tulip_data)} tulip pieces')
 
@@ -93,6 +95,9 @@ if __name__ == '__main__':
             r = contract.functions.updateSymbolData(i, symbol_data[i]).estimate_gas()
             print(f'{r} gas to push symbol {i} data ({len(symbol_data[i])} pieces)')
             total_gas.append(r)
+        r = contract.functions.updateSymbolNames(symbol_names).estimate_gas()
+        print(f'{r} gas to push symbol names')
+        total_gas.append(r)
         r = contract.functions.updateTulipData(tulip_data).estimate_gas()
         print(f'{r} gas to push tulip data')
         total_gas.append(r)
@@ -102,6 +107,9 @@ if __name__ == '__main__':
     if getenv('PUSH'):
         nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
         r = sendit(w3, contract.functions.updatePaletteData(palette_data).build_transaction(), nonce)
+        print(f'sent tx {r.hex()} with nonce {nonce}')
+        nonce += 1
+        r = sendit(w3, contract.functions.updateSymbolNames(symbol_names).build_transaction(), nonce)
         print(f'sent tx {r.hex()} with nonce {nonce}')
         nonce += 1
         for i in symbol_data:
