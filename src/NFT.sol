@@ -40,6 +40,7 @@ contract NFT is ERC721, Ownable {
     }
 
     function stopMinting() external onlyOwner {
+        require(mintingAllowed == true, "minting not active");
         mintingAllowed = false;
         withdraw();
         renounceOwnership();
@@ -48,11 +49,7 @@ contract NFT is ERC721, Ownable {
     function withdraw() public onlyOwner {
         payable(msg.sender).transfer(address(this).balance);
     }
-
-    receive () external payable {
-        payable(deployer).transfer(address(this).balance);
-    }
-
+    
 
     /*
     * Minting

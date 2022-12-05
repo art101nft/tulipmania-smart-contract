@@ -5,54 +5,134 @@ import "forge-std/Test.sol";
 import "../src/NFT.sol";
 
 contract NFTsolmate is Test {
+    event Transfer(address indexed from, address indexed to, uint256 amount);
+
     NFT public nft;
-    uint256 mintPrice = .01637 ether;
+    uint256 mp;
+    address og;
+    address o = address(0xdead);
+    address t = address(0xbeef);
 
     function setUp() public {
         nft = new NFT("redrum");
-        vm.deal(address(0xdead), 100 ether);
+        og = nft.deployer();
+        nft.transferOwnership(o);
+        mp = nft.mintPrice();
     }
 
-    function testMint() public {
+    function testFailMintingFailsUnlessStarted() public {
         assertEq(nft.totalSupply(), 0);
-        vm.prank(address(0xdead));
-        nft.mint{value: 0.1637 ether}(10);
-        assertEq(nft.totalSupply(), 1);
+        assertEq(nft.mintingAllowed(), false);
+        hoax(t);
+        nft.mint{value: mp}(1);
     }
 
-    function testMintingFailsUnlessStarted() public {
-        vm.startPrank(address(0xdead));
-        vm.expectRevert();
-        nft.mint{value: mintPrice}(1);
-        // assertTrue(status, "call did not revert");
-        vm.stopPrank();
-    }
-
-    function testStartMintingAllowsMinting() public {}
-
-    function testStartMintingMintsToOwner() public {}
-
-    function testOnlyOwnerFunctions() public {}
-    
-    function testStopMintingPreventsMinting() public {}
-    
-    function testStopMintingWithdraws() public {}
-    
-    function testStopMintingRenouncesOwnership() public {}
-    
-    function testWithdrawWorks() public {}
-    
-    function testReceiveFaillback() public {}
-    
-    function testMintingRequiresEther() public {}
-
-    // test to see how things work when minting a shit-load
-    function testMintingMany() public {
-        vm.startPrank(nft.owner());
+    function testStartMintingAllowsMinting() public {
+        assertEq(nft.mintingAllowed(), false);
+        hoax(o);
         nft.startMinting();
-        nft.mint{value: mintPrice * 50}(50);
-        vm.stopPrank();
-        assertEq(nft.totalSupply(), 70);
+        assertEq(nft.mintingAllowed(), true);
+    }
+
+    function testMintingMany() public {
+        hoax(o);
+        nft.startMinting();
+        hoax(t);
+        nft.mint{value: mp * 80}(80);
+        assertEq(nft.totalSupply(), 100);
+    }
+
+    function testStartMintingMintsToOwner() public {
+        hoax(o);
+        nft.startMinting();
+        assertEq(nft.totalSupply(), 20);
+        assertEq(nft.balanceOf(o), 20);
+    }
+
+    function testOnlyOwnerFunctions() public {
+        startHoax(t);
+        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+        nft.startMinting();
+        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+        nft.stopMinting();
+        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+        nft.withdraw();
+    }
+    
+    function testStopMintingPreventsMinting() public {
+        startHoax(o);
+        nft.startMinting();
+        nft.stopMinting();
+        assertEq(nft.mintingAllowed(), false);
+        vm.expectRevert(bytes("minting not allowed"));
+        nft.mint{value: mp}(1);
+    }
+    
+    function testStopMintingWithdraws() public {
+        hoax(o);
+        nft.startMinting();
+        hoax(t);
+        nft.mint{value: mp * 10}(10);
+        assertEq(address(nft).balance, mp * 10);
+        hoax(o, 1 ether);
+        nft.stopMinting();
+        assertEq(address(nft).balance, 0);
+        assertEq(address(o).balance, 1 ether + mp * 10);
+    }
+
+    function testCannotStartMintingTwice() public {
+        startHoax(o);
+        nft.startMinting();
+        nft.stopMinting();
+        vm.expectRevert();
+        nft.startMinting();
+    }
+    
+    function testStopMintingRenouncesOwnership() public {
+        startHoax(o);
+        nft.startMinting();
+        nft.stopMinting();
+        assertEq(address(nft.owner()), address(0));
+        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+        nft.startMinting();
+    }
+
+    function testStopMintingOnlyIfStarted() public {
+        startHoax(o);
+        vm.expectRevert(bytes("minting not active"));
+        nft.stopMinting();
+        nft.startMinting();
+        nft.stopMinting();
+    }
+    
+    function testWithdrawWorks() public {
+        hoax(o);
+        nft.startMinting();
+        hoax(t);
+        nft.mint{value: mp * 20}(20);
+        assertEq(address(nft).balance, mp * 20);
+        hoax(o, 1 ether);
+        nft.withdraw();
+        assertEq(address(nft).balance, 0);
+        assertEq(address(o).balance, 1 ether + mp * 20);
+    }
+    
+    
+    function testMintingRequiresEther() public {
+        hoax(o);
+        nft.startMinting();
+        startHoax(t);
+        vm.expectRevert(bytes("not enough ether sent"));
+        nft.mint(1);
+        vm.expectRevert(bytes("not enough ether sent"));
+        nft.mint{value: .01636 ether}(1);
+        nft.mint{value: mp}(1);
+    }
+
+    function testContractCannotReceiveEther() public {
+        hoax(t);
+        vm.expectRevert();
+        payable(address(nft)).transfer(1 ether);
     }
 }
 
