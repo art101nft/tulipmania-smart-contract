@@ -300,7 +300,7 @@ contract NFT is ERC721A, Ownable {
                 string(
                     abi.encodePacked(
                         '{"name": "Tulip #', Strings.toString(tokenId), '"',
-                        ', "description": "No-coiners are meme-ing tulips again and you\'ve spent the last 2 years buyin\' \'em. Why not mint one? Tulip Mania is generative, animated, and on-chain, vector Trash Art. No blocklist, no allowlist, no promises, and no royalties. The content is cc0 and low on rarity. It\'s art!"',
+                        ', "description": "Normies are meme-ing tulips again and you\'ve spent the last 2 years buyin\' \'em. Why not mint one? Tulip Mania! is generative, animated, and 100% on-chain vector art. No allowlist, no promises, and no royalties. Tulip Mania! is a celebration of irrational exuberance. The content is cc0 and low on rarity."',
                         ', "attributes": ', renderMetadata(tokenId),
                         ', "image_data": "data:image/svg+xml;base64,',
                         Base64.encode(bytes(renderSVG(tokenId))), '"',
