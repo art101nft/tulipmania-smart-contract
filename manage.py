@@ -114,6 +114,9 @@ if __name__ == '__main__':
         r = sendit(w3, contract.functions.updatePaletteData(palette_data).build_transaction(), nonce)
         print(f'sent tx {r.hex()} with nonce {nonce} - push palette data')
         nonce += 1
+        r = sendit(w3, contract.functions.updateTulipData(tulip_data).build_transaction(), nonce)
+        print(f'sent tx {r.hex()} with nonce {nonce} - push tulip data')
+        nonce += 1
         r = sendit(w3, contract.functions.updateSymbolNames(symbol_names).build_transaction(), nonce)
         print(f'sent tx {r.hex()} with nonce {nonce} - push symbol names')
         nonce += 1
@@ -121,13 +124,9 @@ if __name__ == '__main__':
             r = sendit(w3, contract.functions.updateSymbolData(i, symbol_data[i]).build_transaction(), nonce)
             print(f'sent tx {r.hex()} with nonce {nonce} - push symbol {symbol_names[i]}')
             nonce += 1
-        r = sendit(w3, contract.functions.updateTulipData(tulip_data).build_transaction(), nonce)
-        print(f'sent tx {r.hex()} with nonce {nonce} - push tulip data')
-        nonce += 1
 
     # Mint owner tokens
     if getenv('MINT'):
-        nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
         r = sendit(w3, contract.functions.ownerMint().build_transaction(), nonce)
         nonce += 1
         print(f'sent tx {r.hex()} with nonce {nonce} - mint owner tokens')
