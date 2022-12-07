@@ -41,12 +41,15 @@ contract NFTsolmate is Test {
         nft.startMinting();
         hoax(t);
         nft.mint{value: mp * 80}(80);
-        assertEq(nft.totalSupply(), 80 + oma);
+        assertEq(nft.totalSupply(), 80);
     }
 
-    function testStartMintingMintsToOwner() public {
-        hoax(o);
+    function testOwnerMint() public {
+        startHoax(o);
         nft.startMinting();
+        assertEq(nft.totalSupply(), 0);
+        assertEq(nft.balanceOf(o), 0);
+        nft.ownerMint();
         assertEq(nft.totalSupply(), oma);
         assertEq(nft.balanceOf(o), oma);
     }
@@ -88,6 +91,13 @@ contract NFTsolmate is Test {
         nft.stopMinting();
         vm.expectRevert();
         nft.startMinting();
+    }
+
+    function testOwnerCannotMintTwice() public {
+        startHoax(o);
+        nft.ownerMint();
+        vm.expectRevert(bytes("owner already minted"));
+        nft.ownerMint();
     }
     
     function testStopMintingRenouncesOwnership() public {
@@ -140,6 +150,7 @@ contract NFTsolmate is Test {
     function testApprovalsWorkAfterStopping() public {
         startHoax(o);
         nft.startMinting();
+        nft.ownerMint();
         assertEq(nft.isApprovedForAll(address(o), address(1)), false);
         vm.expectRevert(bytes("cannot allow approvals while still minting"));
         nft.setApprovalForAll(address(1), true);

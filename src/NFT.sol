@@ -16,8 +16,9 @@ contract NFT is ERC721A, Ownable {
 
     bool public ownerMinted;
     bool public mintingAllowed;
+    bool public mintingHalted;
     address public deployer;
-    uint256 public ownerMintAmount = 200;
+    uint256 public ownerMintAmount = 250;
     uint256 public numPaletteColors;
     uint256 public numSymbols;
     uint256 public numTulipParts;
@@ -34,17 +35,21 @@ contract NFT is ERC721A, Ownable {
     */
 
     function startMinting() external onlyOwner {
-        require(ownerMinted == false, "owner already minted");
         mintingAllowed = true;
-        _safeMint(msg.sender, ownerMintAmount);
-        ownerMinted = true;
     }
 
     function stopMinting() external onlyOwner {
         require(mintingAllowed == true, "minting not active");
         mintingAllowed = false;
+        mintingHalted = true;
         withdraw();
         renounceOwnership();
+    }
+
+    function ownerMint() external onlyOwner {
+        require(ownerMinted == false, "owner already minted");
+        _safeMint(msg.sender, ownerMintAmount);
+        ownerMinted = true;
     }
 
     function withdraw() public onlyOwner {
@@ -58,6 +63,7 @@ contract NFT is ERC721A, Ownable {
 
     function mint(uint256 amount) external payable {
         require(mintingAllowed == true, "minting not allowed");
+        require(mintingHalted == false, "minting not allowed");
         require(msg.value == mintPrice * amount, "not enough ether sent");
         _safeMint(msg.sender, amount);
     }
