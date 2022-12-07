@@ -56,7 +56,6 @@ def get_tulip_data():
 def sendit(w3, t, nonce):
     t['from'] = w3.eth.defaultAccount
     t['nonce'] = nonce
-    nonce += 1
     s = w3.eth.account.sign_transaction(t, private_key=getenv(f'{net}_KEY'))
     return w3.eth.send_raw_transaction(s.rawTransaction)
 
@@ -80,14 +79,15 @@ if __name__ == '__main__':
     w3 = Web3(Web3.HTTPProvider(WEB3_PROVIDER_URI))
     w3.eth.defaultAccount = w3.eth.account.from_key(getenv(f'{net}_KEY')).address
     contract = get_eth_contract(getenv(f'{net}_CONTRACT'), './out/NFT.sol/NFT.json')
+    nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
 
     # Calculate gas
     if getenv('CHECK'):
         gwei = 15
         print('[+] Checking gas consumption requirements')
         total_gas = []
-        print(f'2000000 gas to deploy contract')
-        total_gas.append(2000000)
+        print(f'3500000 gas to deploy contract')
+        total_gas.append(3500000)
         r = contract.functions.updatePaletteData(palette_data).estimate_gas()
         print(f'{r} gas to push palette data')
         total_gas.append(r)
@@ -101,24 +101,41 @@ if __name__ == '__main__':
         r = contract.functions.updateTulipData(tulip_data).estimate_gas()
         print(f'{r} gas to push tulip data')
         total_gas.append(r)
-        print(f'You will need {sum(total_gas)} gas to upload all the SVG data. That is approximately {w3.fromWei((sum(total_gas) * gwei), "gwei")} ETH at {gwei} gwei')
+        r = contract.functions.ownerMint().estimate_gas()
+        print(f'{r} gas to mint tokens to the contract owner')
+        total_gas.append(r)
+        r = contract.functions.startMinting().estimate_gas()
+        print(f'{r} gas to start minting to public')
+        total_gas.append(r)
+        print(f'You will need {sum(total_gas)} gas to deploy the contract, upload all the SVG data, mint to the contract owner, and start minting. That is approximately {w3.fromWei((sum(total_gas) * gwei), "gwei")} ETH at {gwei} gwei')
 
     # Push SVG data into the contract
     if getenv('PUSH'):
-        nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
         r = sendit(w3, contract.functions.updatePaletteData(palette_data).build_transaction(), nonce)
-        print(f'sent tx {r.hex()} with nonce {nonce}')
+        print(f'sent tx {r.hex()} with nonce {nonce} - push palette data')
         nonce += 1
         r = sendit(w3, contract.functions.updateSymbolNames(symbol_names).build_transaction(), nonce)
-        print(f'sent tx {r.hex()} with nonce {nonce}')
+        print(f'sent tx {r.hex()} with nonce {nonce} - push symbol names')
         nonce += 1
         for i in symbol_data:
             r = sendit(w3, contract.functions.updateSymbolData(i, symbol_data[i]).build_transaction(), nonce)
-            print(f'sent tx {r.hex()} with nonce {nonce}')
+            print(f'sent tx {r.hex()} with nonce {nonce} - push symbol {symbol_names[i]}')
             nonce += 1
         r = sendit(w3, contract.functions.updateTulipData(tulip_data).build_transaction(), nonce)
-        print(f'sent tx {r.hex()} with nonce {nonce}')
+        print(f'sent tx {r.hex()} with nonce {nonce} - push tulip data')
         nonce += 1
+
+    # Mint owner tokens
+    if getenv('MINT'):
+        nonce = w3.eth.get_transaction_count(w3.eth.defaultAccount)
+        r = sendit(w3, contract.functions.ownerMint().build_transaction(), nonce)
+        nonce += 1
+        print(f'sent tx {r.hex()} with nonce {nonce} - mint owner tokens')
+
+    # Check supply
+    if getenv('SUPPLY'):
+        ts = contract.functions.totalSupply().call()
+        print(f'total supply: {ts}')
 
     # Parse SVG data
     if getenv('SVG'):
