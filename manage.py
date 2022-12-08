@@ -96,7 +96,7 @@ if __name__ == '__main__':
         total_gas.append(r)
         for i in symbol_data:
             r = contract.functions.updateSymbolData(i, symbol_data[i]).estimate_gas()
-            print(f'{r} gas to push symbol {i} data ({len(symbol_data[i])} pieces)')
+            print(f'{r} gas to push {symbol_names[i]} data')
             total_gas.append(r)
         r = contract.functions.updateSymbolNames(symbol_names).estimate_gas()
         print(f'{r} gas to push symbol names')
