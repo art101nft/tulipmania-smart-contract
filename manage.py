@@ -2,13 +2,16 @@
 
 from web3 import Web3
 from bs4 import BeautifulSoup
-
+from dotenv import load_dotenv
 
 import json
 
 from base64 import b64decode
 from os import getenv, path
 from glob import glob
+
+
+load_dotenv()
 
 
 def get_eth_contract(_ca, _rp):
