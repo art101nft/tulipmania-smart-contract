@@ -2,12 +2,12 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import "../src/NFT.sol";
+import "../src/TulipMania.sol";
 
 contract NFTsolmate is Test {
     event Transfer(address indexed from, address indexed to, uint256 amount);
 
-    NFT public nft;
+    TulipMania public nft;
     uint256 mp;
     uint256 oma;
     address og;
@@ -15,7 +15,7 @@ contract NFTsolmate is Test {
     address t = address(0xbeef);
 
     function setUp() public {
-        nft = new NFT("redrum");
+        nft = new TulipMania("redrum");
         og = nft.deployer();
         nft.transferOwnership(o);
         mp = nft.mintPrice();

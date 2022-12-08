@@ -7,7 +7,7 @@ import {Base64} from "openzeppelin-contracts/utils/Base64.sol";
 import {Strings} from "openzeppelin-contracts/utils/Strings.sol";
 
 
-contract NFT is ERC721A, Ownable {
+contract TulipMania is ERC721A, Ownable {
 
     mapping(uint256 => string) public PaletteData;
     mapping(uint256 => mapping(uint256 => string)) public SymbolData;
@@ -25,7 +25,7 @@ contract NFT is ERC721A, Ownable {
     uint256 public mintPrice = 0.01637 ether;
     string public secret;
 
-    constructor(string memory _secret) ERC721A("Tulip Mania", "TULIP") {
+    constructor(string memory _secret) ERC721A("Tulip Mania!", "TULIP") {
         secret = _secret;
         deployer = msg.sender;
     }
