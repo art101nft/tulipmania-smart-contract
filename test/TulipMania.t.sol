@@ -163,6 +163,17 @@ contract NFTsolmate is Test {
         nft.approve(address(1), 1);
         assertEq(nft.getApproved(1), address(1));
     }
+
+    function testTransferOwnerWorks() public {
+        startHoax(o);
+        nft.startMinting();
+        nft.ownerMint();
+        nft.transferOwnership(t);
+        assertEq(nft.owner(), t);
+        startHoax(t);
+        nft.stopMinting();
+        assertEq(nft.owner(), address(0));
+    }
 }
 
 // Zarnold Edward Quigley
